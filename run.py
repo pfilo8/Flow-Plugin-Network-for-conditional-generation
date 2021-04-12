@@ -1,25 +1,13 @@
-import yaml
-import argparse
-
-from models import *
-from experiments.vae import VAEXperiment
 import torch.backends.cudnn as cudnn
 from pytorch_lightning import Trainer
 from pytorch_lightning.logging import TestTubeLogger
 
-parser = argparse.ArgumentParser(description='Generic runner for VAE models')
-parser.add_argument('--config', '-c',
-                    dest="filename",
-                    metavar='FILE',
-                    help='path to the config file',
-                    default='configs/vae.yaml')
+from experiments.vae import VAEXperiment
+from models import vae_models
+from utils import get_config, get_parser
 
-args = parser.parse_args()
-with open(args.filename, 'r') as file:
-    try:
-        config = yaml.safe_load(file)
-    except yaml.YAMLError as exc:
-        print(exc)
+args = get_parser().parse_args()
+config = get_config(args)
 
 tt_logger = TestTubeLogger(
     save_dir=config['logging_params']['save_dir'],

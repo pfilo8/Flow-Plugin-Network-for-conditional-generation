@@ -1,8 +1,27 @@
+import argparse
 import pytorch_lightning as pl
+import yaml
 
 
-## Utils to handle newer PyTorch Lightning changes from version 0.6
-## ==================================================================================================== ##
+def get_parser():
+    parser = argparse.ArgumentParser(description='Generic runner for Flow models')
+    parser.add_argument(
+        '--config', '-c',
+        dest="filename",
+        metavar='FILE',
+        help='path to the config file',
+        default='configs/vae.yaml'
+    )
+    return parser
+
+
+def get_config(args):
+    with open(args.filename, 'r') as file:
+        try:
+            config = yaml.safe_load(file)
+            return config
+        except yaml.YAMLError as exc:
+            print(exc)
 
 
 def data_loader(fn):
@@ -13,10 +32,10 @@ def data_loader(fn):
     """
 
     def func_wrapper(self):
-        try: # Works for version 0.6.0
+        try:  # Works for version 0.6.0
             return pl.data_loader(fn)(self)
 
-        except: # Works for version > 0.6.0
+        except:  # Works for version > 0.6.0
             return fn(self)
 
     return func_wrapper

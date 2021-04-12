@@ -1,8 +1,3 @@
-import os
-import yaml
-import argparse
-import numpy as np
-
 from models import *
 from experiments.flow import FlowDataModule, FlowExperiment
 import torch.backends.cudnn as cudnn
@@ -10,20 +5,10 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.logging import TestTubeLogger
 
 from flows import FLOWS
+from utils import get_config, get_parser
 
-parser = argparse.ArgumentParser(description='Generic runner for VAE models')
-parser.add_argument('--config', '-c',
-                    dest="filename",
-                    metavar='FILE',
-                    help='path to the config file',
-                    default='configs/vae.yaml')
-
-args = parser.parse_args()
-with open(args.filename, 'r') as file:
-    try:
-        config = yaml.safe_load(file)
-    except yaml.YAMLError as exc:
-        print(exc)
+args = get_parser().parse_args()
+config = get_config(args)
 
 tt_logger = TestTubeLogger(
     save_dir=config['logging_params']['save_dir'],
