@@ -2,18 +2,13 @@ from models import *
 from experiments.flow import FlowDataModule, FlowExperiment
 import torch.backends.cudnn as cudnn
 from pytorch_lightning import Trainer
-from pytorch_lightning.loggers import TestTubeLogger
 
 from flows import FLOWS
-from utils import get_config, get_parser
+from utils import get_config, get_parser, get_logger
 
 args = get_parser().parse_args()
 config = get_config(args)
-
-tt_logger = TestTubeLogger(
-    save_dir=config['logging_params']['save_dir'],
-    name=config['logging_params']['name']
-)
+tt_logger = get_logger(config)
 
 # For reproducibility
 torch.manual_seed(config['logging_params']['manual_seed'])
@@ -38,8 +33,5 @@ runner = Trainer(
     **config['trainer_params']
 )
 
-tt_logger.experiment.tag(config)
-
 print(f"======= Training {config['model_params']['name']} =======")
 runner.fit(experiment, dataset)
-# torch.save(runner.model.model, "model.ckpt")

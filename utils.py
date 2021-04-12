@@ -2,6 +2,8 @@ import argparse
 import pytorch_lightning as pl
 import yaml
 
+from pytorch_lightning.loggers import TestTubeLogger
+
 
 def get_parser():
     parser = argparse.ArgumentParser(description='Generic runner for Flow models')
@@ -22,6 +24,15 @@ def get_config(args):
             return config
         except yaml.YAMLError as exc:
             print(exc)
+
+
+def get_logger(config):
+    tt_logger = TestTubeLogger(
+        save_dir=config['logging_params']['save_dir'],
+        name=config['logging_params']['name']
+    )
+    tt_logger.experiment.tag(config)
+    return tt_logger
 
 
 def data_loader(fn):
