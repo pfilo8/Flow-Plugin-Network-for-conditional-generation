@@ -1,7 +1,4 @@
-import numpy as np
-import torch
-import torch.backends.cudnn as cudnn
-from pytorch_lightning import Trainer
+import pytorch_lightning as pl
 
 from experiments.vae import VAEXperiment
 from models import vae_models
@@ -11,19 +8,16 @@ args = get_parser_experiment().parse_args()
 config = get_config(args)
 tt_logger = get_logger(config)
 
-# For reproducibility
-torch.manual_seed(config['logging_params']['manual_seed'])
-np.random.seed(config['logging_params']['manual_seed'])
-cudnn.deterministic = True
-cudnn.benchmark = False
+pl.seed_everything(config['logging_params']['manual_seed'])
 
 model = vae_models[config['model_params']['name']](**config['model_params'])
 experiment = VAEXperiment(model, config['exp_params'])
 
-runner = Trainer(
+runner = pl.Trainer(
     default_root_dir=f"{tt_logger.save_dir}",
     min_epochs=1,
     logger=tt_logger,
+    deterministic=True,
     **config['trainer_params']
 )
 
