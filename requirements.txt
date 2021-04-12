@@ -1,7 +1,6 @@
 pytorch-lightning
 PyYAML==5.1.2
-tensorboard==2.1.0
-tensorboardX==1.6
+tensorboard
 terminado==0.8.1
 test-tube==0.7.0
 torch==1.6.0
