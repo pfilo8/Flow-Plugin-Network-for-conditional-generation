@@ -22,7 +22,7 @@ class FlowExperiment(pl.LightningModule):
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         x, y = batch
         loss = -self.model.log_prob(inputs=x, context=y).mean()
-        self.log('loss', loss.item(), prog_bar=True)
+        self.logger.log_metrics({'loss': loss.item()})
         return loss
 
     def configure_optimizers(self):

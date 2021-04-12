@@ -16,6 +16,7 @@ tt_logger = TestTubeLogger(
     debug=False,
     create_git_tag=False,
 )
+tt_logger.log_hyperparams(config)
 
 # For reproducibility
 torch.manual_seed(config['logging_params']['manual_seed'])

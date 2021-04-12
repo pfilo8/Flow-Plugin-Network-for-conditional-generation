@@ -7,7 +7,7 @@ model_params:
 
 exp_params:
   data_path_train_x: "data/z_train.csv"
-  data_path_train_y: "data/y_train.csv"
+  data_path_train_y: "data/y_train_gender.csv"
   batch_size: 64
 
 trainer_params:
