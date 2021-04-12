@@ -2,7 +2,7 @@ model_params:
   name: "MAF"
   params:
     features: 128
-    hidden_features: 100
+    hidden_features: 200
     context_features: 1
     num_layers: 10
     num_blocks_per_layer: 5
@@ -10,11 +10,12 @@ model_params:
 exp_params:
   data_path_train_x: "data/z_train.csv"
   data_path_train_y: "data/y_train_gender.csv"
-  batch_size: 64
+  batch_size: 1024
+  num_workers: 16
 
 trainer_params:
   gpus: 1
-  max_epochs: 10
+  max_epochs: 100
 
 logging_params:
   save_dir: "logs/"
