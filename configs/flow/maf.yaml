@@ -1,8 +1,9 @@
 model_params:
-  name: 'MAF'
-  features: 128
-  hidden_features: 50
-  context_features: 1
+  name: "MAF"
+  params:
+    features: 128
+    hidden_features: 50
+    context_features: 1
 
 exp_params:
   data_path_train_x: "data/z_train.csv"

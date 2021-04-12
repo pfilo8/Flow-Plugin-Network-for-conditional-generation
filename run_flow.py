@@ -29,7 +29,7 @@ dataset = FlowDataModule(
     batch_size=config['exp_params']['batch_size'],
 )
 flow = FLOWS[config['model_params']['name']](
-    **config['model_params']['features']
+    **config['model_params']['params']
 )
 experiment = FlowExperiment(flow)
 
