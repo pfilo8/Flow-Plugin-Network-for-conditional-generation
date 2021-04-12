@@ -2,7 +2,7 @@ model_params:
   name: "MAF"
   params:
     features: 128
-    hidden_features: 50
+    hidden_features: 20
     context_features: 1
 
 exp_params:
