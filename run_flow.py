@@ -4,9 +4,9 @@ import torch.backends.cudnn as cudnn
 from pytorch_lightning import Trainer
 
 from flows import FLOWS
-from utils import get_config, get_parser, get_logger
+from utils import get_config, get_parser_experiment, get_logger
 
-args = get_parser().parse_args()
+args = get_parser_experiment().parse_args()
 config = get_config(args)
 tt_logger = get_logger(config)
 

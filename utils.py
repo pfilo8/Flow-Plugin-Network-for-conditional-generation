@@ -5,7 +5,7 @@ import yaml
 from pytorch_lightning.loggers import TestTubeLogger
 
 
-def get_parser():
+def get_parser_experiment():
     parser = argparse.ArgumentParser(description='Generic runner for Flow models')
     parser.add_argument(
         '--config', '-c',
@@ -13,6 +13,17 @@ def get_parser():
         metavar='FILE',
         help='path to the config file',
         default='configs/vae.yaml'
+    )
+    return parser
+
+
+def get_parser_latent_space():
+    parser = argparse.ArgumentParser(description='Generic runner for Flow models')
+    parser.add_argument(
+        '--path', '-p',
+        dest="filename",
+        metavar='FILE',
+        help='path to the model'
     )
     return parser
 
