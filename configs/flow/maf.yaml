@@ -1,0 +1,20 @@
+model_params:
+  name: 'MAF'
+  features: 128
+  hidden_features: 50
+  context_features: 1
+
+exp_params:
+  data_path_train_x: "data/z_train.csv"
+  data_path_train_y: "data/y_train.csv"
+  batch_size: 64
+
+trainer_params:
+  gpus: 1
+  max_nb_epochs: 50
+  max_epochs: 50
+
+logging_params:
+  save_dir: "logs/"
+  name: "DFCAE"
+  manual_seed: 1265
