@@ -30,7 +30,7 @@ path = args.path
 base_path = Path(path).parent.parent
 
 data_dir = base_path / Path('latent_space')
-data_dir.mkdir()
+data_dir.mkdir(exist_ok=True)
 
 model = torch.load(path)
 

@@ -21,7 +21,7 @@ def get_parser_latent_space():
     parser = argparse.ArgumentParser(description='Generic runner for Flow models')
     parser.add_argument(
         '--path', '-p',
-        dest="filename",
+        dest="path",
         metavar='FILE',
         help='path to the model'
     )
