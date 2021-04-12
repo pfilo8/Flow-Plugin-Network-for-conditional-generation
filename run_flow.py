@@ -2,7 +2,7 @@ from models import *
 from experiments.flow import FlowDataModule, FlowExperiment
 import torch.backends.cudnn as cudnn
 from pytorch_lightning import Trainer
-from pytorch_lightning.logging import TestTubeLogger
+from pytorch_lightning.loggers.test_tube import TestTubeLogger
 
 from flows import FLOWS
 from utils import get_config, get_parser
@@ -49,4 +49,4 @@ runner = Trainer(
 
 print(f"======= Training {config['model_params']['name']} =======")
 runner.fit(experiment, dataset)
-torch.save(runner.model.model, "model.ckpt")
+# torch.save(runner.model.model, "model.ckpt")

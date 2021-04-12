@@ -1,6 +1,6 @@
 import torch.backends.cudnn as cudnn
 from pytorch_lightning import Trainer
-from pytorch_lightning.logging import TestTubeLogger
+from pytorch_lightning.loggers.test_tube import TestTubeLogger
 
 from experiments.vae import VAEXperiment
 from models import vae_models

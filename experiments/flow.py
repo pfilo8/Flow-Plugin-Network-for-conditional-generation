@@ -4,9 +4,9 @@ import pandas as pd
 import pytorch_lightning as pl
 import torch
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
 
-from flows import Flow
+from nflows.flows.base import Flow
+from torch.utils.data import Dataset, DataLoader
 
 
 class FlowExperiment(pl.LightningModule):
