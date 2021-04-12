@@ -11,3 +11,4 @@ torchvision==0.4.0
 jupyter
 jupyterlab
 nflows
+scikit-learn

@@ -1,8 +1,15 @@
+import json
+from pathlib import Path
+
 import argparse
+import pandas as pd
 import pytorch_lightning as pl
+import torch
 import yaml
 
 from pytorch_lightning.loggers import TestTubeLogger
+
+from flows import FLOWS
 
 
 def get_parser_experiment():
@@ -61,3 +68,21 @@ def data_loader(fn):
             return fn(self)
 
     return func_wrapper
+
+
+def load_flow(model_dir):
+    meta_path = Path(model_dir) / Path('meta_tags.csv')
+    state_dict_path = list((Path(model_dir) / Path('checkpoints')).iterdir())[0]
+
+    state_dict = torch.load(state_dict_path)
+    state_dict = {str(k).replace('model.', ''): v for k, v in state_dict['state_dict'].items()}
+
+    s = pd.read_csv(meta_path).iloc[0, 1]
+    config = json.loads(s.replace("'", '"'))
+
+    flow = FLOWS[config['name']](
+        **config['params']
+    )
+    flow.load_state_dict(state_dict)
+    return flow
+
