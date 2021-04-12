@@ -29,21 +29,14 @@ dataset = FlowDataModule(
     batch_size=config['exp_params']['batch_size'],
 )
 flow = FLOWS[config['model_params']['name']](
-    features=config['model_params']['features'],
-    hidden_features=config['model_params']['hidden_features'],
-    context_features=config['model_params'].get('context_features')
+    **config['model_params']['features']
 )
 experiment = FlowExperiment(flow)
 
 runner = Trainer(
-    default_save_path=f"{tt_logger.save_dir}",
-    min_nb_epochs=1,
+    default_root_dir=f"{tt_logger.save_dir}",
+    min_epochs=1,
     logger=tt_logger,
-    log_save_interval=100,
-    train_percent_check=1.,
-    val_percent_check=1.,
-    num_sanity_val_steps=5,
-    early_stop_callback=False,
     **config['trainer_params']
 )
 
