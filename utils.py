@@ -10,6 +10,7 @@ import yaml
 from pytorch_lightning.loggers import TestTubeLogger
 
 from flows import FLOWS
+from models import vae_models
 
 
 def get_parser_experiment():
@@ -70,7 +71,7 @@ def data_loader(fn):
     return func_wrapper
 
 
-def load_flow(model_dir):
+def load_model(model_dir, model_factory='flow'):
     meta_path = Path(model_dir) / Path('meta_tags.csv')
     state_dict_path = list((Path(model_dir) / Path('checkpoints')).iterdir())[0]
 
@@ -80,9 +81,14 @@ def load_flow(model_dir):
     s = pd.read_csv(meta_path).iloc[0, 1]
     config = json.loads(s.replace("'", '"'))
 
-    flow = FLOWS[config['name']](
-        **config['params']
-    )
-    flow.load_state_dict(state_dict)
-    return flow
-
+    if model_factory == 'flow':
+        model = FLOWS[config['name']](
+            **config['params']
+        )
+    elif model_factory == 'vae':
+        name = config.pop('name')
+        model = vae_models[name](**config)
+    else:
+        raise ValueError(f'{model_factory} model type not supported.')
+    model.load_state_dict(state_dict)
+    return model

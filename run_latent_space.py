@@ -8,7 +8,9 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import CelebA
 
-from utils import get_parser_latent_space
+from utils import get_parser_latent_space, load_model
+
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 def get_latent_space(model, dataloader):
@@ -17,7 +19,7 @@ def get_latent_space(model, dataloader):
 
     with torch.no_grad():
         for x, y in dataloader:
-            x = x.cuda()
+            x = x.to(DEVICE)
             mu, log_var = model.encode(x)
             z = model.reparameterize(mu, log_var)
             zs.append(z.detach().cpu().numpy())
@@ -32,7 +34,7 @@ base_path = Path(path).parent.parent
 data_dir = base_path / Path('latent_space')
 data_dir.mkdir(exist_ok=True)
 
-model = torch.load(path)
+model = load_model(path, 'vae').to(DEVICE)
 
 SetRange = transforms.Lambda(lambda X: 2 * X - 1.)
 
