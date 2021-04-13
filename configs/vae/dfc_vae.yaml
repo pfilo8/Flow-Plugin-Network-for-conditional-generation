@@ -8,14 +8,14 @@ exp_params:
   data_path: "data"
   img_size: 64
   batch_size: 256 # Better to have a square number
+  num_workers: 24
   LR: 0.005
   weight_decay: 0.0
   scheduler_gamma: 0.95
 
 trainer_params:
   gpus: 1
-  max_nb_epochs: 50
-  max_epochs: 50
+  max_epochs: 100
 
 logging_params:
   save_dir: "logs/"
