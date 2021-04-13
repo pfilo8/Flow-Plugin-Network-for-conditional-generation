@@ -8,10 +8,13 @@ model_params:
     num_blocks_per_layer: 5
 
 exp_params:
-  data_path_train_x: "data/z_train.csv"
-  data_path_train_y: "data/y_train_gender.csv"
+  data_path_train_x: "logs/DFCVAE/version_0/latent_space/z_train.csv"
+  data_path_train_y: "logs/DFCVAE/version_0/latent_space/y_train_gender.csv"
+  data_path_valid_x: "logs/DFCVAE/version_0/latent_space/z_valid.csv"
+  data_path_valid_y: "logs/DFCVAE/version_0/latent_space/y_valid_gender.csv"
   batch_size: 1024
-  num_workers: 16
+  num_workers: 24
+  patience: 10
 
 trainer_params:
   gpus: 1

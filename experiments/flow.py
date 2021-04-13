@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 import pandas as pd
 import pytorch_lightning as pl
@@ -22,7 +22,13 @@ class FlowExperiment(pl.LightningModule):
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         x, y = batch
         loss = -self.model.log_prob(inputs=x, context=y).mean()
-        self.logger.log_metrics({'loss': loss.item()})
+        self.log('train_loss', loss.item())
+        return loss
+
+    def validation_step(self, batch, batch_idx, optimizer_idx=0):
+        x, y = batch
+        loss = -self.model.log_prob(inputs=x, context=y).mean()
+        self.log('val_loss', loss.item())
         return loss
 
     def configure_optimizers(self):
@@ -62,12 +68,16 @@ class FlowDataModule(pl.LightningDataModule):
             self,
             data_path_train_x: str,
             data_path_train_y: Union[None, str],
+            data_path_valid_x: str,
+            data_path_valid_y: [Union[None, str]],
             batch_size: int = 64,
             num_workers: int = 0
     ):
         super().__init__()
         self.data_path_train_x = data_path_train_x
         self.data_path_train_y = data_path_train_y
+        self.data_path_valid_x = data_path_valid_x
+        self.data_path_valid_y = data_path_valid_y
         self.batch_size = batch_size
         self.num_workers = num_workers
 
@@ -76,6 +86,10 @@ class FlowDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         self.train_data = CSVDataset(self.data_path_train_x, self.data_path_train_y)
+        self.valid_data = CSVDataset(self.data_path_valid_x, self.data_path_valid_y)
 
     def train_dataloader(self):
         return DataLoader(self.train_data, batch_size=self.batch_size, num_workers=self.num_workers)
+
+    def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
+        return DataLoader(self.valid_data, batch_size=self.batch_size, num_workers=self.num_workers)
