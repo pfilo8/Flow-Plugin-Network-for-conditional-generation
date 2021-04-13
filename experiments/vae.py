@@ -1,4 +1,3 @@
-import math
 import torch
 from torch import optim
 from models import BaseVAE
@@ -41,7 +40,6 @@ class VAEXperiment(pl.LightningModule):
                                               batch_idx=batch_idx)
 
         self.logger.experiment.log({key: val.item() for key, val in train_loss.items()})
-
         return train_loss
 
     def validation_step(self, batch, batch_idx, optimizer_idx=0):
@@ -53,14 +51,15 @@ class VAEXperiment(pl.LightningModule):
                                             M_N=self.params['batch_size'] / self.num_val_imgs,
                                             optimizer_idx=optimizer_idx,
                                             batch_idx=batch_idx)
-
         return val_loss
 
     def validation_end(self, outputs):
         avg_loss = torch.stack([x['loss'] for x in outputs]).mean()
         tensorboard_logs = {'avg_val_loss': avg_loss}
         self.sample_images()
-        return {'val_loss': avg_loss, 'log': tensorboard_logs}
+        results = {'val_loss': avg_loss, 'log': tensorboard_logs}
+        self.logger.experiment.log(results)
+        return results
 
     def sample_images(self):
         # Get sample reconstruction image
@@ -135,33 +134,38 @@ class VAEXperiment(pl.LightningModule):
         transform = self.data_transforms()
 
         if self.params['dataset'] == 'celeba':
-            dataset = CelebA(root=self.params['data_path'],
-                             split="train",
-                             transform=transform,
-                             download=False)
+            dataset = CelebA(
+                root=self.params['data_path'],
+                split="train",
+                transform=transform,
+                download=False
+            )
         else:
             raise ValueError('Undefined dataset type')
 
         self.num_train_imgs = len(dataset)
-        return DataLoader(dataset,
-                          batch_size=self.params['batch_size'],
-                          num_workers=self.params['num_workers'],
-                          shuffle=True,
-                          drop_last=True)
+        return DataLoader(
+            dataset,
+            batch_size=self.params['batch_size'],
+            num_workers=self.params['num_workers'],
+            shuffle=True
+        )
 
     @data_loader
     def val_dataloader(self):
         transform = self.data_transforms()
 
         if self.params['dataset'] == 'celeba':
-            self.sample_dataloader = DataLoader(CelebA(root=self.params['data_path'],
-                                                       split="test",
-                                                       transform=transform,
-                                                       download=False),
-                                                batch_size=144,
-                                                num_workers=self.params['num_workers'],
-                                                shuffle=False,
-                                                drop_last=True)
+            self.sample_dataloader = DataLoader(
+                CelebA(
+                    root=self.params['data_path'],
+                    split="test",
+                    transform=transform,
+                    download=False),
+                batch_size=144,
+                num_workers=self.params['num_workers'],
+                shuffle=False
+            )
             self.num_val_imgs = len(self.sample_dataloader)
         else:
             raise ValueError('Undefined dataset type')

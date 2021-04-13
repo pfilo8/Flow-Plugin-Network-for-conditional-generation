@@ -12,6 +12,10 @@ pl.seed_everything(config['logging_params']['manual_seed'])
 
 model = vae_models[config['model_params']['name']](**config['model_params'])
 experiment = VAEXperiment(model, config['exp_params'])
+early_stop_callback = pl.callbacks.EarlyStopping(
+   monitor='val_loss',
+   patience=config['exp_params'].get('patience', 3),
+)
 
 runner = pl.Trainer(
     default_root_dir=f"{tt_logger.save_dir}",
