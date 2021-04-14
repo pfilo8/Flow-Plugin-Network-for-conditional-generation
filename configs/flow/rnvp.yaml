@@ -1,5 +1,5 @@
 model_params:
-  name: "MAF"
+  name: "RNVP"
   params:
     features: 128
     hidden_features: 1000
@@ -22,5 +22,5 @@ trainer_params:
 
 logging_params:
   save_dir: "logs/"
-  name: "MAF"
+  name: "RNVP"
   manual_seed: 1265
