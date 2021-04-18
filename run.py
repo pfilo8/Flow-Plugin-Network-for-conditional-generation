@@ -1,3 +1,4 @@
+import torch
 import pytorch_lightning as pl
 
 from datasets import get_dataset
@@ -34,4 +35,10 @@ runner = pl.Trainer(
 )
 
 print(f"======= Training {config['model_params']['name']} =======")
-runner.fit(experiment, dataset)
+try:
+    runner.fit(experiment, dataset)
+finally:
+    torch.save(
+        runner.model,
+        f"{runner.logger.save_dir}/{runner.logger.name}/version_{runner.logger.version}/checkpoints/model.pkt"
+    )
