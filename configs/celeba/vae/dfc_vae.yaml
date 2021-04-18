@@ -20,6 +20,6 @@ trainer_params:
   max_epochs: 100
 
 logging_params:
-  save_dir: "logs/"
+  save_dir: "logs/celeba/"
   name: "DFCVAE"
   manual_seed: 1265

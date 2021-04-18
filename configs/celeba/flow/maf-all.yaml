@@ -8,10 +8,10 @@ model_params:
     num_blocks_per_layer: 5
 
 exp_params:
-  data_path_train_x: "logs/DFCVAE/version_0/latent_space/z_train.csv"
-  data_path_train_y: "logs/DFCVAE/version_0/latent_space/y_train.csv"
-  data_path_valid_x: "logs/DFCVAE/version_0/latent_space/z_valid.csv"
-  data_path_valid_y: "logs/DFCVAE/version_0/latent_space/y_valid.csv"
+  data_path_train_x: "logs/celeba/DFCVAE/version_0/latent_space/z_train.csv"
+  data_path_train_y: "logs/celeba/DFCVAE/version_0/latent_space/y_train.csv"
+  data_path_valid_x: "logs/celeba/DFCVAE/version_0/latent_space/z_valid.csv"
+  data_path_valid_y: "logs/celeba/DFCVAE/version_0/latent_space/y_valid.csv"
   batch_size: 4096
   num_workers: 32
   patience: 2000
@@ -23,6 +23,6 @@ trainer_params:
   num_nodes: 1
 
 logging_params:
-  save_dir: "logs/"
+  save_dir: "logs/celeba/"
   name: "MAF-all"
   manual_seed: 1265
