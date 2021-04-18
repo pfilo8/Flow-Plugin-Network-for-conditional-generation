@@ -3,13 +3,11 @@ from pathlib import Path
 
 import argparse
 import pandas as pd
-import pytorch_lightning as pl
 import torch
 import yaml
 
 from pytorch_lightning.loggers import TestTubeLogger
 
-from datasets import CelebaDataModule, MNISTDataModule
 from models import FLOWS
 from models import VAE_MODELS
 
