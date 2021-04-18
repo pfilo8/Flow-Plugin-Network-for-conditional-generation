@@ -14,11 +14,11 @@ exp_params:
   data_path_valid_y: "logs/DFCVAE/version_0/latent_space/y_valid_gender.csv"
   batch_size: 1024
   num_workers: 24
-  patience: 100
+  patience: 1000
 
 trainer_params:
   gpus: 1
-  max_epochs: 100
+  max_epochs: 1000
 
 logging_params:
   save_dir: "logs/"

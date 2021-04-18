@@ -83,11 +83,12 @@ class VAEXperiment(pl.LightningModule):
             samples = self.model.sample(144,
                                         self.curr_device,
                                         labels=test_label)
-            vutils.save_image(samples.cpu().data,
-                              f"{self.logger.save_dir}{self.logger.name}/version_{self.logger.version}/media/"
-                              f"{self.logger.name}_{self.current_epoch}.png",
-                              normalize=True,
-                              nrow=12)
+            vutils.save_image(
+                samples.cpu().data,
+                f"{self.logger.save_dir}{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
+                normalize=True,
+                nrow=12
+            )
         except:
             pass
 

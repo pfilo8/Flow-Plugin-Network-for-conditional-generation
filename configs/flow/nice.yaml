@@ -6,6 +6,7 @@ model_params:
     context_features: 1
     num_layers: 10
     num_blocks_per_layer: 5
+    use_volume_preserving: True
 
 exp_params:
   data_path_train_x: "logs/DFCVAE/version_0/latent_space/z_train.csv"
@@ -17,10 +18,10 @@ exp_params:
   patience: 1000
 
 trainer_params:
-  gpus: 1
+  gpus: '1'
   max_epochs: 1000
 
 logging_params:
   save_dir: "logs/"
-  name: "RNVP"
+  name: "NICE"
   manual_seed: 1265

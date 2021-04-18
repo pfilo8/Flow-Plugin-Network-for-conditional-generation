@@ -1,26 +1,28 @@
 model_params:
-  name: "RNVP"
+  name: "MAF"
   params:
     features: 128
     hidden_features: 1000
-    context_features: 1
+    context_features: 40
     num_layers: 10
     num_blocks_per_layer: 5
 
 exp_params:
   data_path_train_x: "logs/DFCVAE/version_0/latent_space/z_train.csv"
-  data_path_train_y: "logs/DFCVAE/version_0/latent_space/y_train_gender.csv"
+  data_path_train_y: "logs/DFCVAE/version_0/latent_space/y_train.csv"
   data_path_valid_x: "logs/DFCVAE/version_0/latent_space/z_valid.csv"
-  data_path_valid_y: "logs/DFCVAE/version_0/latent_space/y_valid_gender.csv"
-  batch_size: 1024
-  num_workers: 24
-  patience: 1000
+  data_path_valid_y: "logs/DFCVAE/version_0/latent_space/y_valid.csv"
+  batch_size: 4096
+  num_workers: 32
+  patience: 2000
 
 trainer_params:
-  gpus: 1
-  max_epochs: 1000
+  gpus: 2
+  max_epochs: 2000
+  accelerator: "ddp"
+  num_nodes: 1
 
 logging_params:
   save_dir: "logs/"
-  name: "RNVP"
+  name: "MAF-all"
   manual_seed: 1265
