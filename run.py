@@ -1,8 +1,8 @@
 import pytorch_lightning as pl
 
-from datasets import CelebaDataModule
+from datasets import get_dataset
 from experiments.vae import VAEXperiment
-from models import VAE_MODELS
+from models import get_model
 from utils import get_config, get_parser_experiment, get_logger
 
 args = get_parser_experiment().parse_args()
@@ -11,12 +11,8 @@ tt_logger = get_logger(config)
 
 pl.seed_everything(config['logging_params']['manual_seed'])
 
-dataset = CelebaDataModule(
-    data_dir=config['exp_params']['data_path'],
-    batch_size=config['exp_params']['batch_size'],
-    num_workers=config['exp_params']['num_workers']
-)
-model = VAE_MODELS[config['model_params']['name']](**config['model_params']['params'])
+dataset = get_dataset(config)
+model = get_model(config)
 experiment = VAEXperiment(model, config['exp_params'])
 early_stop_callback = pl.callbacks.EarlyStopping(
     monitor='val_loss',

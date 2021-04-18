@@ -9,7 +9,8 @@ import yaml
 
 from pytorch_lightning.loggers import TestTubeLogger
 
-from flows import FLOWS
+from datasets import CelebaDataModule, MNISTDataModule
+from models import FLOWS
 from models import VAE_MODELS
 
 
@@ -52,23 +53,6 @@ def get_logger(config):
     )
     tt_logger.experiment.tag(config)
     return tt_logger
-
-
-def data_loader(fn):
-    """
-    Decorator to handle the deprecation of data_loader from 0.7
-    :param fn: User defined data loader function
-    :return: A wrapper for the data_loader function
-    """
-
-    def func_wrapper(self):
-        try:  # Works for version 0.6.0
-            return pl.data_loader(fn)(self)
-
-        except:  # Works for version > 0.6.0
-            return fn(self)
-
-    return func_wrapper
 
 
 def load_model(model_dir, model_factory='flow'):

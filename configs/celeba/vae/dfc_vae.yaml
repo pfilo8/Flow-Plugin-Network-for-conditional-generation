@@ -1,5 +1,6 @@
 model_params:
   name: 'DFCVAE'
+  type: "vae"
   params:
     in_channels: 3
     latent_dim: 128
