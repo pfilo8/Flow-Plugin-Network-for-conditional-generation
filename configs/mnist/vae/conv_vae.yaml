@@ -1,0 +1,24 @@
+model_params:
+  name: "ConvVAE"
+  type: "vae"
+  params:
+    latent_dim: 40
+
+dataset:
+  name: "mnist"
+  dataset_params:
+    data_dir: "data"
+    batch_size: 512
+    num_workers: 24
+
+exp_params:
+  LR: 0.001
+
+trainer_params:
+  gpus: 1
+  max_epochs: 100
+
+logging_params:
+  save_dir: "logs/mnist"
+  name: "ConvVAE"
+  manual_seed: 1265

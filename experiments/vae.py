@@ -8,11 +8,7 @@ from models.vae.base import BaseVAE
 
 class VAEXperiment(pl.LightningModule):
 
-    def __init__(
-            self,
-            vae_model: BaseVAE,
-            params: dict
-    ) -> None:
+    def __init__(self, vae_model: BaseVAE, params: dict) -> None:
         super(VAEXperiment, self).__init__()
 
         self.model = vae_model
@@ -35,17 +31,13 @@ class VAEXperiment(pl.LightningModule):
         return train_loss
 
     def training_epoch_end(self, outputs) -> None:
-        try:
-            samples = self.model.sample(64, self.device)
-            vutils.save_image(
-                samples,
-                f"{self.logger.save_dir}/{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
-                normalize=True,
-                nrow=8
-            )
-        except Exception as e:
-            print(e)
-            pass
+        samples = self.model.sample(64, self.device)
+        vutils.save_image(
+            samples,
+            f"{self.logger.save_dir}/{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
+            normalize=True,
+            nrow=8
+        )
 
     def configure_optimizers(self):
         optims = []
@@ -54,7 +46,7 @@ class VAEXperiment(pl.LightningModule):
         optimizer = optim.Adam(
             self.model.parameters(),
             lr=self.params['LR'],
-            weight_decay=self.params['weight_decay']
+            weight_decay=self.params.get('weight_decay', 0)
         )
         optims.append(optimizer)
         # Check if more than 1 optimizer is required (Used for adversarial training)

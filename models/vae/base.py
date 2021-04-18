@@ -16,7 +16,7 @@ class BaseVAE(nn.Module):
     def decode(self, input: torch.Tensor) -> Any:
         raise NotImplementedError
 
-    def sample(self, batch_size: int, current_device: int, **kwargs) -> torch.Tensor:
+    def sample(self, num_samples: int, current_device: int, **kwargs) -> torch.Tensor:
         raise RuntimeWarning()
 
     def generate(self, x: torch.Tensor, **kwargs) -> torch.Tensor:

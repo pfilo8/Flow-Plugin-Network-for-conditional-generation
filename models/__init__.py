@@ -1,12 +1,15 @@
 from .flows.autoregressive import MaskedAutoregressiveFlow
 from .flows.realnvp import SimpleRealNVP
 
-from .vae.vanilla_vae import VanillaVAE
+from .vae.conv_vae import ConvVAE
 from .vae.dfcvae import DFCVAE
+from .vae.vanilla_vae import VanillaVAE
 
 VAE_MODELS = {
-    'DFCVAE': DFCVAE,
-    'VAE': VanillaVAE
+    'DFCVAE': DFCVAE,  # Works for CelebA like datasets (3 channels, 64x64)
+    'VAE': VanillaVAE,  # Works for CelebA like datasets (3 channels, 64x64)
+    'ConvVAE': ConvVAE  # Works for 1 channel datasets (MNIST)
+
 }
 
 FLOWS = {

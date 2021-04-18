@@ -165,9 +165,7 @@ class DFCVAE(BaseVAE):
 
         return features
 
-    def loss_function(self,
-                      *args,
-                      **kwargs) -> dict:
+    def loss_function(self, *args, **kwargs) -> dict:
         """
         Computes the VAE loss function.
         KL(N(\mu, \sigma), N(0, 1)) = \log \frac{1}{\sigma} + \frac{\sigma^2 + \mu^2}{2} - \frac{1}{2}
@@ -194,9 +192,7 @@ class DFCVAE(BaseVAE):
         loss = self.beta * (recons_loss + feature_loss) + self.alpha * kld_weight * kld_loss
         return {'loss': loss, 'Reconstruction_Loss': recons_loss, 'KLD': -kld_loss}
 
-    def sample(self,
-               num_samples: int,
-               current_device: int, **kwargs) -> torch.Tensor:
+    def sample(self, num_samples: int, current_device: int, **kwargs) -> torch.Tensor:
         """
         Samples from the latent space and return the corresponding
         image space map.
@@ -214,5 +210,4 @@ class DFCVAE(BaseVAE):
         :param x: (torch.Tensor) [B x C x H x W]
         :return: (torch.Tensor) [B x C x H x W]
         """
-
         return self.forward(x)[0]
