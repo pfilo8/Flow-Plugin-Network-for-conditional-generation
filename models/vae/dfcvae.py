@@ -181,7 +181,7 @@ class DFCVAE(BaseVAE):
         mu = args[4]
         log_var = args[5]
 
-        kld_weight = 1  # kwargs['M_N']  # Account for the minibatch samples from the dataset
+        kld_weight = kwargs['M_N']  # Account for the minibatch samples from the dataset
         recons_loss = F.mse_loss(recons, input)
 
         feature_loss = 0.0
