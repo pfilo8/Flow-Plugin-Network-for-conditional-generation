@@ -1,6 +1,7 @@
 import pytorch_lightning as pl
 
-from experiments.flow import FlowDataModule, FlowExperiment
+from datasets import FlowDataModule
+from experiments.flow import FlowExperiment
 from flows import FLOWS
 from utils import get_config, get_parser_experiment, get_logger
 

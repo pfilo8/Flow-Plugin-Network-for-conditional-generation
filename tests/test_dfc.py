@@ -1,7 +1,6 @@
 import torch
 import unittest
 from models import DFCVAE
-from torchsummary import summary
 
 
 class TestDFCVAE(unittest.TestCase):
@@ -9,11 +8,6 @@ class TestDFCVAE(unittest.TestCase):
     def setUp(self) -> None:
         # self.model2 = VAE(3, 10)
         self.model = DFCVAE(3, 10)
-
-    def test_summary(self):
-        print(summary(self.model, (3, 64, 64), device='cpu'))
-
-        # print(summary(self.model2, (3, 64, 64), device='cpu'))
 
     def test_forward(self):
         x = torch.randn(16, 3, 64, 64)
@@ -26,14 +20,11 @@ class TestDFCVAE(unittest.TestCase):
         x = torch.randn(16, 3, 64, 64)
 
         result = self.model(x)
-        loss = self.model.loss_function(*result, M_N = 0.005)
+        loss = self.model.loss_function(*result, M_N=0.005)
         print(loss)
 
     def test_sample(self):
-        self.model.cuda()
         y = self.model.sample(144, 0)
-
-
 
 
 if __name__ == '__main__':

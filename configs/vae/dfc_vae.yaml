@@ -1,18 +1,18 @@
 model_params:
   name: 'DFCVAE'
-  in_channels: 3
-  latent_dim: 128
+  params:
+    in_channels: 3
+    latent_dim: 128
 
 exp_params:
   dataset: celeba
   data_path: "data"
-  img_size: 64
-  batch_size: 256 # Better to have a square number
+  batch_size: 256
   num_workers: 24
+  patience: 25
   LR: 0.005
   weight_decay: 0.0
   scheduler_gamma: 0.95
-  patience: 5
 
 trainer_params:
   gpus: 1

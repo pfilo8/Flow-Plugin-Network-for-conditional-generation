@@ -10,7 +10,7 @@ import yaml
 from pytorch_lightning.loggers import TestTubeLogger
 
 from flows import FLOWS
-from models import vae_models
+from models import VAE_MODELS
 
 
 def get_parser_experiment():
@@ -87,7 +87,7 @@ def load_model(model_dir, model_factory='flow'):
         )
     elif model_factory == 'vae':
         name = config.pop('name')
-        model = vae_models[name](**config)
+        model = VAE_MODELS[name](**config)
     else:
         raise ValueError(f'{model_factory} model type not supported.')
     model.load_state_dict(state_dict)

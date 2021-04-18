@@ -1,32 +1,23 @@
 import torch
 from torch import optim
 from models import BaseVAE
-from models.types_ import *
-from utils import data_loader
 import pytorch_lightning as pl
-from torchvision import transforms
 import torchvision.utils as vutils
-from torchvision.datasets import CelebA
-from torch.utils.data import DataLoader
 
 
 class VAEXperiment(pl.LightningModule):
 
-    def __init__(self,
-                 vae_model: BaseVAE,
-                 params: dict) -> None:
+    def __init__(
+            self,
+            vae_model: BaseVAE,
+            params: dict
+    ) -> None:
         super(VAEXperiment, self).__init__()
 
         self.model = vae_model
         self.params = params
-        self.curr_device = None
-        self.hold_graph = False
-        try:
-            self.hold_graph = self.params['retain_first_backpass']
-        except:
-            pass
 
-    def forward(self, input: Tensor, **kwargs) -> Tensor:
+    def forward(self, input: torch.Tensor, **kwargs) -> torch.Tensor:
         return self.model(input, **kwargs)
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
@@ -34,10 +25,12 @@ class VAEXperiment(pl.LightningModule):
         self.curr_device = real_img.device
 
         results = self.forward(real_img, labels=labels)
-        train_loss = self.model.loss_function(*results,
-                                              M_N=self.params['batch_size'] / self.num_train_imgs,
-                                              optimizer_idx=optimizer_idx,
-                                              batch_idx=batch_idx)
+        train_loss = self.model.loss_function(
+            *results,
+            # M_N=self.params['batch_size'] / self.num_train_imgs,
+            optimizer_idx=optimizer_idx,
+            batch_idx=batch_idx
+        )
 
         self.logger.experiment.log({key: val.item() for key, val in train_loss.items()})
         return train_loss
@@ -47,10 +40,12 @@ class VAEXperiment(pl.LightningModule):
         self.curr_device = real_img.device
 
         results = self.forward(real_img, labels=labels)
-        val_loss = self.model.loss_function(*results,
-                                            M_N=self.params['batch_size'] / self.num_val_imgs,
-                                            optimizer_idx=optimizer_idx,
-                                            batch_idx=batch_idx)
+        val_loss = self.model.loss_function(
+            *results,
+            # M_N=self.params['batch_size'] / self.num_val_imgs,
+            optimizer_idx=optimizer_idx,
+            batch_idx=batch_idx
+        )
         return val_loss
 
     def validation_end(self, outputs):
@@ -72,12 +67,6 @@ class VAEXperiment(pl.LightningModule):
                           f"recons_{self.logger.name}_{self.current_epoch}.png",
                           normalize=True,
                           nrow=12)
-
-        # vutils.save_image(test_input.data,
-        #                   f"{self.logger.save_dir}{self.logger.name}/version_{self.logger.version}/"
-        #                   f"real_img_{self.logger.name}_{self.current_epoch}.png",
-        #                   normalize=True,
-        #                   nrow=12)
 
         try:
             samples = self.model.sample(144,
@@ -129,61 +118,3 @@ class VAEXperiment(pl.LightningModule):
                 return optims, scheds
         except:
             return optims
-
-    @data_loader
-    def train_dataloader(self):
-        transform = self.data_transforms()
-
-        if self.params['dataset'] == 'celeba':
-            dataset = CelebA(
-                root=self.params['data_path'],
-                split="train",
-                transform=transform,
-                download=False
-            )
-        else:
-            raise ValueError('Undefined dataset type')
-
-        self.num_train_imgs = len(dataset)
-        return DataLoader(
-            dataset,
-            batch_size=self.params['batch_size'],
-            num_workers=self.params['num_workers'],
-            shuffle=True
-        )
-
-    @data_loader
-    def val_dataloader(self):
-        transform = self.data_transforms()
-
-        if self.params['dataset'] == 'celeba':
-            self.sample_dataloader = DataLoader(
-                CelebA(
-                    root=self.params['data_path'],
-                    split="test",
-                    transform=transform,
-                    download=False),
-                batch_size=144,
-                num_workers=self.params['num_workers'],
-                shuffle=False
-            )
-            self.num_val_imgs = len(self.sample_dataloader)
-        else:
-            raise ValueError('Undefined dataset type')
-
-        return self.sample_dataloader
-
-    def data_transforms(self):
-
-        SetRange = transforms.Lambda(lambda X: 2 * X - 1.)
-        SetScale = transforms.Lambda(lambda X: X / X.sum(0).expand_as(X))
-
-        if self.params['dataset'] == 'celeba':
-            transform = transforms.Compose([transforms.RandomHorizontalFlip(),
-                                            transforms.CenterCrop(148),
-                                            transforms.Resize(self.params['img_size']),
-                                            transforms.ToTensor(),
-                                            SetRange])
-        else:
-            raise ValueError('Undefined dataset type')
-        return transform
