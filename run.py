@@ -14,17 +14,22 @@ pl.seed_everything(config['logging_params']['manual_seed'])
 dataset = get_dataset(config)
 model = get_model(config)
 experiment = VAEXperiment(model, config['exp_params'])
-early_stop_callback = pl.callbacks.EarlyStopping(
-    monitor='val_loss',
-    patience=config['exp_params'].get('patience', 3),
-)
+
+if 'patience' in config.get('exp_params', {}):
+    early_stop_callback = pl.callbacks.EarlyStopping(
+        monitor='val_loss',
+        patience=config['exp_params'].get('patience', 3),
+    )
+    callbacks = [early_stop_callback]
+else:
+    callbacks = None
 
 runner = pl.Trainer(
     default_root_dir=f"{tt_logger.save_dir}",
     min_epochs=1,
     logger=tt_logger,
     deterministic=True,
-    callbacks=[early_stop_callback],
+    callbacks=callbacks,
     **config['trainer_params']
 )
 

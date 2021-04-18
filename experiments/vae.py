@@ -1,8 +1,9 @@
 import torch
 from torch import optim
-from models import BaseVAE
 import pytorch_lightning as pl
 import torchvision.utils as vutils
+
+from models.vae.base import BaseVAE
 
 
 class VAEXperiment(pl.LightningModule):
@@ -31,7 +32,6 @@ class VAEXperiment(pl.LightningModule):
             optimizer_idx=optimizer_idx,
             batch_idx=batch_idx
         )
-
         self.logger.experiment.log({key: val.item() for key, val in train_loss.items()})
         return train_loss
 
@@ -42,55 +42,35 @@ class VAEXperiment(pl.LightningModule):
         results = self.forward(real_img, labels=labels)
         val_loss = self.model.loss_function(
             *results,
-            # M_N=self.params['batch_size'] / self.num_val_imgs,
+            M_N=0.1,
             optimizer_idx=optimizer_idx,
             batch_idx=batch_idx
         )
+        self.logger.experiment.log({key: val.item() for key, val in val_loss.items()})
         return val_loss
 
-    def validation_end(self, outputs):
-        avg_loss = torch.stack([x['loss'] for x in outputs]).mean()
-        tensorboard_logs = {'avg_val_loss': avg_loss}
-        self.sample_images()
-        results = {'val_loss': avg_loss, 'log': tensorboard_logs}
-        self.logger.experiment.log(results)
-        return results
-
-    def sample_images(self):
-        # Get sample reconstruction image
-        test_input, test_label = next(iter(self.sample_dataloader))
-        test_input = test_input.to(self.curr_device)
-        test_label = test_label.to(self.curr_device)
-        recons = self.model.generate(test_input, labels=test_label)
-        vutils.save_image(recons.data,
-                          f"{self.logger.save_dir}{self.logger.name}/version_{self.logger.version}/media/"
-                          f"recons_{self.logger.name}_{self.current_epoch}.png",
-                          normalize=True,
-                          nrow=12)
-
+    def training_epoch_end(self, outputs) -> None:
         try:
-            samples = self.model.sample(144,
-                                        self.curr_device,
-                                        labels=test_label)
+            samples = self.model.sample(64, self.device)
             vutils.save_image(
-                samples.cpu().data,
-                f"{self.logger.save_dir}{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
+                samples,
+                f"{self.logger.save_dir}/{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
                 normalize=True,
-                nrow=12
+                nrow=8
             )
-        except:
+        except Exception as e:
+            print(e)
             pass
 
-        del test_input, recons  # , samples
-
     def configure_optimizers(self):
-
         optims = []
         scheds = []
 
-        optimizer = optim.Adam(self.model.parameters(),
-                               lr=self.params['LR'],
-                               weight_decay=self.params['weight_decay'])
+        optimizer = optim.Adam(
+            self.model.parameters(),
+            lr=self.params['LR'],
+            weight_decay=self.params['weight_decay']
+        )
         optims.append(optimizer)
         # Check if more than 1 optimizer is required (Used for adversarial training)
         try:

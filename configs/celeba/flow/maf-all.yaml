@@ -7,14 +7,18 @@ model_params:
     num_layers: 10
     num_blocks_per_layer: 5
 
+dataset:
+  name: "flow"
+  dataset_params:
+    data_path_train_x: "logs/celeba/DFCVAE/version_0/latent_space/z_train.csv"
+    data_path_train_y: "logs/celeba/DFCVAE/version_0/latent_space/y_train_gender.csv"
+    data_path_valid_x: "logs/celeba/DFCVAE/version_0/latent_space/z_valid.csv"
+    data_path_valid_y: "logs/celeba/DFCVAE/version_0/latent_space/y_valid_gender.csv"
+    batch_size: 1024
+    num_workers: 24
+
 exp_params:
-  data_path_train_x: "logs/celeba/DFCVAE/version_0/latent_space/z_train.csv"
-  data_path_train_y: "logs/celeba/DFCVAE/version_0/latent_space/y_train.csv"
-  data_path_valid_x: "logs/celeba/DFCVAE/version_0/latent_space/z_valid.csv"
-  data_path_valid_y: "logs/celeba/DFCVAE/version_0/latent_space/y_valid.csv"
-  batch_size: 4096
-  num_workers: 32
-  patience: 2000
+  patience: 1000
 
 trainer_params:
   gpus: 2

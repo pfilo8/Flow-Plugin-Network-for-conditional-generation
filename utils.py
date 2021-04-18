@@ -64,12 +64,13 @@ def load_model(model_dir, model_factory='flow'):
     config = json.loads(s.replace("'", '"').replace("True", 'true'))
 
     if model_factory == 'flow':
-        model = FLOWS[config['name']](
+        name = config['name']
+        model = FLOWS[name](
             **config['params']
         )
     elif model_factory == 'vae':
-        name = config.pop('name')
-        model = VAE_MODELS[name](**config)
+        name = config['name']
+        model = VAE_MODELS[name](**config['params'])
     else:
         raise ValueError(f'{model_factory} model type not supported.')
     model.load_state_dict(state_dict)

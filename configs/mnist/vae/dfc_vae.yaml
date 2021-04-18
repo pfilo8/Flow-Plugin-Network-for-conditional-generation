@@ -2,15 +2,17 @@ model_params:
   name: 'DFCVAE'
   type: "vae"
   params:
-    in_channels: 3
+    in_channels: 1
     latent_dim: 128
 
+dataset:
+  name: "mnist"
+  dataset_params:
+    data_dir: "data"
+    batch_size: 256
+    num_workers: 24
+
 exp_params:
-  dataset: "mnist"
-  data_path: "data"
-  batch_size: 256
-  num_workers: 24
-  patience: 25
   LR: 0.005
   weight_decay: 0.0
   scheduler_gamma: 0.95
@@ -20,6 +22,6 @@ trainer_params:
   max_epochs: 100
 
 logging_params:
-  save_dir: "logs/"
+  save_dir: "logs/mnist"
   name: "DFCVAE"
   manual_seed: 1265

@@ -1,10 +1,11 @@
 from typing import List
 
 import torch
-from models import BaseVAE
 from torch import nn
-from torchvision.models import vgg19_bn
 from torch.nn import functional as F
+from torchvision.models import vgg19_bn
+
+from .base import BaseVAE
 
 
 class DFCVAE(BaseVAE):
@@ -203,7 +204,7 @@ class DFCVAE(BaseVAE):
         :param current_device: (Int) Device to run the model
         :return: (torch.Tensor)
         """
-        z = torch.randn(num_samples, self.latent_dim)
+        z = torch.randn(num_samples, self.latent_dim).to(current_device)
         samples = self.decode(z)
         return samples
 
