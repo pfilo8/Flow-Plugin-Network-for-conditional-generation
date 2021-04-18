@@ -79,7 +79,7 @@ def load_model(model_dir, model_factory='flow'):
     state_dict = {str(k).replace('model.', ''): v for k, v in state_dict['state_dict'].items()}
 
     s = pd.read_csv(meta_path).iloc[0, 1]
-    config = json.loads(s.replace("'", '"'))
+    config = json.loads(s.replace("'", '"').replace("True", 'true'))
 
     if model_factory == 'flow':
         model = FLOWS[config['name']](
