@@ -2,7 +2,7 @@ import torch
 import pytorch_lightning as pl
 
 from datasets import get_dataset
-from experiments.vae import VAEXperiment
+from experiments import get_experiment
 from models import get_model
 from utils import get_config, get_parser_experiment, get_logger
 
@@ -14,7 +14,7 @@ pl.seed_everything(config['logging_params']['manual_seed'])
 
 dataset = get_dataset(config)
 model = get_model(config)
-experiment = VAEXperiment(model, config['exp_params'])
+experiment = get_experiment(config, model)
 
 if 'patience' in config.get('exp_params', {}):
     early_stop_callback = pl.callbacks.EarlyStopping(
@@ -39,6 +39,6 @@ try:
     runner.fit(experiment, dataset)
 finally:
     torch.save(
-        runner.model,
+        runner.model.model,
         f"{runner.logger.save_dir}/{runner.logger.name}/version_{runner.logger.version}/checkpoints/model.pkt"
     )

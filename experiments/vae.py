@@ -23,7 +23,6 @@ class VAEXperiment(pl.LightningModule):
 
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         real_img, labels = batch
-        self.curr_device = real_img.device
 
         results = self.forward(real_img, labels=labels)
         train_loss = self.model.loss_function(
@@ -34,20 +33,6 @@ class VAEXperiment(pl.LightningModule):
         )
         self.logger.experiment.log({key: val.item() for key, val in train_loss.items()})
         return train_loss
-
-    def validation_step(self, batch, batch_idx, optimizer_idx=0):
-        real_img, labels = batch
-        self.curr_device = real_img.device
-
-        results = self.forward(real_img, labels=labels)
-        val_loss = self.model.loss_function(
-            *results,
-            M_N=0.1,
-            optimizer_idx=optimizer_idx,
-            batch_idx=batch_idx
-        )
-        self.logger.experiment.log({key: val.item() for key, val in val_loss.items()})
-        return val_loss
 
     def training_epoch_end(self, outputs) -> None:
         try:
