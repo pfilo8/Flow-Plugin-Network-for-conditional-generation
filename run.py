@@ -31,7 +31,7 @@ runner = pl.Trainer(
     logger=tt_logger,
     deterministic=True,
     callbacks=callbacks,
-    **config['exp_params']
+    **config['trainer_params']
 )
 
 print(f"======= Training {config['model_params']['name']} =======")
