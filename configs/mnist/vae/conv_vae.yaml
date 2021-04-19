@@ -2,8 +2,7 @@ model_params:
   name: "ConvVAE"
   type: "vae"
   params:
-    latent_dim: 40
-    hidden_dim: 64
+    latent_dim: 128
 
 dataset:
   name: "mnist"
@@ -13,11 +12,12 @@ dataset:
     num_workers: 24
 
 exp_params:
-  LR: 0.001
+  LR: 0.005
+  M_N: 1
 
 trainer_params:
   gpus: 1
-  max_epochs: 100
+  max_epochs: 5000
 
 logging_params:
   save_dir: "logs/mnist"
