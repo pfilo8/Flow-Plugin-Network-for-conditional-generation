@@ -3,19 +3,18 @@ model_params:
   type: "vae"
   params:
     in_channels: 1
-    latent_dim: 128
+    latent_dim: 40
 
 dataset:
   name: "mnist"
   dataset_params:
     data_dir: "data"
-    batch_size: 256
+    batch_size: 1024
     num_workers: 24
 
 exp_params:
   LR: 0.005
-  weight_decay: 0.0
-  scheduler_gamma: 0.95
+  M_N: 0.02
 
 trainer_params:
   gpus: 1

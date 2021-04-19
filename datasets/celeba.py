@@ -34,13 +34,10 @@ class CelebaDataModule(pl.LightningDataModule):
         self.celeba_test = CelebA(self.data_dir, split='test', transform=self.transform)
 
     def train_dataloader(self):
-        self.num_train_images = len(self.celeba_train)
         return DataLoader(self.celeba_train, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True)
 
     def val_dataloader(self):
-        self.num_val_images = len(self.celeba_val)
         return DataLoader(self.celeba_val, batch_size=self.batch_size, num_workers=self.num_workers)
 
     def test_dataloader(self):
-        self.num_test_images = len(self.celeba_test)
         return DataLoader(self.celeba_test, batch_size=self.batch_size, num_workers=self.num_workers)
