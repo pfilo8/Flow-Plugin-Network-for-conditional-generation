@@ -3,13 +3,13 @@ model_params:
   type: "vae"
   params:
     in_channels: 3
-    latent_dim: 128
+    latent_dim: 1024
 
 dataset:
   name: "celeba"
   dataset_params:
     data_dir: "data"
-    batch_size: 256
+    batch_size: 144
     num_workers: 24
 
 exp_params:
@@ -18,8 +18,8 @@ exp_params:
   scheduler_gamma: 0.95
 
 trainer_params:
-  gpus: 1
-  max_epochs: 100
+  gpus: '0'
+  max_epochs: 1000
 
 logging_params:
   save_dir: "logs/celeba/"
