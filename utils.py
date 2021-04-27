@@ -35,8 +35,8 @@ def get_parser_latent_space():
     return parser
 
 
-def get_config(args):
-    with open(args.filename, 'r') as file:
+def get_config(filename):
+    with open(filename, 'r') as file:
         try:
             config = yaml.safe_load(file)
             return config

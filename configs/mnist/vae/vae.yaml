@@ -17,7 +17,7 @@ exp_params:
   M_N: 0.01
 
 trainer_params:
-  gpus: '1'
+  gpus: '0'
   max_epochs: 100
 
 logging_params:

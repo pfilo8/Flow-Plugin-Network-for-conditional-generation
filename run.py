@@ -7,7 +7,7 @@ from models import get_model
 from utils import get_config, get_parser_experiment, get_logger, save_config
 
 args = get_parser_experiment().parse_args()
-config = get_config(args)
+config = get_config(args.filename)
 tt_logger = get_logger(config)
 
 pl.seed_everything(config['logging_params']['manual_seed'])
