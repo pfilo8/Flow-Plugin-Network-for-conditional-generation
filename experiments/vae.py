@@ -31,13 +31,14 @@ class VAEXperiment(pl.LightningModule):
         return train_loss
 
     def training_epoch_end(self, outputs) -> None:
-        samples = self.model.sample(64, self.device)
-        vutils.save_image(
-            samples,
-            f"{self.logger.save_dir}/{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
-            normalize=True,
-            nrow=8
-        )
+        if self.current_epoch % 50 == 0:
+            samples = self.model.sample(64, self.device)
+            vutils.save_image(
+                samples,
+                f"{self.logger.save_dir}/{self.logger.name}/version_{self.logger.version}/media/{self.logger.name}_{self.current_epoch}.png",
+                normalize=True,
+                nrow=8
+            )
 
     def configure_optimizers(self):
         optims = []
