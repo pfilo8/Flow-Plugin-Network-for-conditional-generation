@@ -2,13 +2,13 @@ model_params:
   name: "ConvAE"
   type: "vae"
   params:
-    latent_dim: 128
+    latent_dim: 256
 
 dataset:
   name: "mnist"
   dataset_params:
     data_dir: "data"
-    batch_size: 512
+    batch_size: 1024
     num_workers: 24
 
 exp_params:

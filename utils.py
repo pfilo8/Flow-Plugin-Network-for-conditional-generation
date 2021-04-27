@@ -44,6 +44,15 @@ def get_config(args):
             print(exc)
 
 
+def save_config(config, path):
+    with open(path, 'w') as file:
+        try:
+            config = yaml.safe_dump(config, file)
+            return config
+        except yaml.YAMLError as exc:
+            print(exc)
+
+
 def get_logger(config):
     tt_logger = TestTubeLogger(
         save_dir=config['logging_params']['save_dir'],

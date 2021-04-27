@@ -91,7 +91,7 @@ class ConvAE(BaseVAE):
     def loss_function(self, *args: Any, **kwargs) -> torch.Tensor:
         recons = args[0]
         input = args[1]
-        recons_loss = F.mse_loss(recons, input, reduction='sum')
+        recons_loss = F.mse_loss(recons, input, reduction='mean')
         return {'loss': recons_loss, 'Reconstruction_Loss': recons_loss}
 
     def sample(self, num_samples: int, current_device, **kwargs) -> torch.Tensor:

@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 from datasets import get_dataset
 from experiments import get_experiment
 from models import get_model
-from utils import get_config, get_parser_experiment, get_logger
+from utils import get_config, get_parser_experiment, get_logger, save_config
 
 args = get_parser_experiment().parse_args()
 config = get_config(args)
@@ -41,4 +41,8 @@ finally:
     torch.save(
         runner.model.model,
         f"{runner.logger.save_dir}/{runner.logger.name}/version_{runner.logger.version}/checkpoints/model.pkt"
+    )
+    save_config(
+        config,
+        f"{runner.logger.save_dir}/{runner.logger.name}/version_{runner.logger.version}/config.yaml"
     )
