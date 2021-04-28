@@ -2,18 +2,17 @@ model_params:
   name: "ConvVAE"
   type: "vae"
   params:
-    latent_dim: 40
+    latent_dim: 128
 
 dataset:
   name: "mnist"
   dataset_params:
     data_dir: "data"
-    batch_size: 512
+    batch_size: 1024
     num_workers: 24
 
 exp_params:
-  LR: 0.005
-  M_N: 1
+  LR: 0.001
 
 trainer_params:
   gpus: '0'

@@ -13,10 +13,9 @@ dataset:
 
 exp_params:
   LR: 0.005
-  M_N: 1
 
 trainer_params:
-  gpus: 1
+  gpus: '0'
   max_epochs: 5000
 
 logging_params:
