@@ -12,7 +12,7 @@ dataset:
     num_workers: 24
 
 exp_params:
-  LR: 0.001
+  LR: 0.005
 
 trainer_params:
   gpus: '0'
