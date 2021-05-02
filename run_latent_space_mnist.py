@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import torch
 
+from sklearn.preprocessing import OneHotEncoder
+
 from datasets import get_dataset
 from utils import get_parser_latent_space, get_config
 
@@ -17,12 +19,16 @@ def get_latent_space(model, dataloader):
     with torch.no_grad():
         for x, y in dataloader:
             x = x.to(DEVICE)
-            # z = model.encode(x)
-            mu, log_var = model.encode(x)
-            z = model.reparametrize(mu, log_var)
+            z = model.encode(x)
+            #mu, log_var = model.encode(x)
+            #z = model.reparametrize(mu, log_var)
             zs.append(z.detach().cpu().numpy())
             ys.append(y.numpy().reshape(-1, 1))
     return np.vstack(zs), np.vstack(ys)
+
+
+def get_ohe_labels(encoder, df):
+    return pd.DataFrame(encoder.transform(df), columns=encoder.categories_[0])
 
 
 args = get_parser_latent_space().parse_args()
@@ -39,17 +45,17 @@ dataset.prepare_data()
 dataset.setup()
 
 dataloader_train = dataset.train_dataloader()
-# dataloader_valid = dataset.val_dataloader()
 dataloader_test = dataset.test_dataloader()
 
 zs_train, ys_train = get_latent_space(model, dataloader_train)
-# zs_valid, ys_valid = get_latent_space(model, dataloader_valid)
 zs_test, ys_test = get_latent_space(model, dataloader_test)
 
+ohe = OneHotEncoder(sparse=False).fit(ys_train)
+
 pd.DataFrame(zs_train).to_csv(data_dir / Path('z_train.csv'), index=False)
-# pd.DataFrame(zs_valid).to_csv(data_dir / Path('z_valid.csv'), index=False)
 pd.DataFrame(zs_test).to_csv(data_dir / Path('z_test.csv'), index=False)
 
 pd.DataFrame(ys_train).to_csv(data_dir / Path('y_train.csv'), index=False)
-# pd.DataFrame(ys_valid).to_csv(data_dir / Path('y_valid.csv'), index=False)
 pd.DataFrame(ys_test).to_csv(data_dir / Path('y_test.csv'), index=False)
+get_ohe_labels(ohe, ys_train).to_csv(data_dir / Path('y_train_ohe.csv'), index=False)
+get_ohe_labels(ohe, ys_test).to_csv(data_dir / Path('y_test_ohe.csv'), index=False)
