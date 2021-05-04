@@ -30,7 +30,7 @@ def get_parser_latent_space():
         '--path', '-p',
         dest="path",
         metavar='FILE',
-        help='path to the model'
+        help='path to the model directory in logs'
     )
     return parser
 
