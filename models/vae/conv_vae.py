@@ -101,8 +101,8 @@ class ConvVAE(BaseVAE):
         mu = args[2]
         log_var = args[3]
 
-        recons_loss = F.binary_cross_entropy(recons, input, reduction='mean')
-        kld_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim=1), dim=0)
+        recons_loss = F.binary_cross_entropy(recons, input, reduction='sum')
+        kld_loss = -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
 
         loss = recons_loss + kld_loss
         return {'loss': loss, 'Reconstruction_Loss': recons_loss, 'KLD': -kld_loss}

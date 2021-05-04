@@ -1,0 +1,29 @@
+model_params:
+  name: "MAF"
+  type: "flow"
+  params:
+    features: 128
+    hidden_features: 256
+    context_features: 55
+
+dataset:
+  name: "flow"
+  dataset_params:
+    data_path_train_x: "logs/shapenet/PointFlow/all/latent_space/z_train.csv"
+    data_path_train_y: "logs/shapenet/PointFlow/all/latent_space/y_train_gender.csv"
+    data_path_valid_x: "logs/shapenet/PointFlow/all/latent_space/z_valid.csv"
+    data_path_valid_y: "logs/shapenet/PointFlow/all/latent_space/y_valid_gender.csv"
+    batch_size: 1024
+    num_workers: 24
+
+exp_params:
+  patience: 1000
+
+trainer_params:
+  gpus: 1
+  max_epochs: 1000
+
+logging_params:
+  save_dir: "logs/shapenet/"
+  name: "MAF"
+  manual_seed: 1265

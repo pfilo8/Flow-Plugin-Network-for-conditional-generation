@@ -1,0 +1,29 @@
+model_params:
+  name: "RNVP"
+  type: "flow"
+  params:
+    features: 40
+    hidden_features: 40
+    context_features: 10
+
+dataset:
+  name: "flow"
+  dataset_params:
+    data_path_train_x: "logs/mnist/ConvVAE/version_15/latent_space/z_train.csv"
+    data_path_train_y: "logs/mnist/ConvVAE/version_15/latent_space/y_train_ohe.csv"
+    data_path_valid_x: "logs/mnist/ConvVAE/version_15/latent_space/z_test.csv"
+    data_path_valid_y: "logs/mnist/ConvVAE/version_15/latent_space/y_test_ohe.csv"
+    batch_size: 64
+    num_workers: 24
+
+exp_params:
+  patience: 50
+
+trainer_params:
+  gpus: 1
+  max_epochs: 5000
+
+logging_params:
+  save_dir: "logs/mnist/"
+  name: "RNVP"
+  manual_seed: 1265
