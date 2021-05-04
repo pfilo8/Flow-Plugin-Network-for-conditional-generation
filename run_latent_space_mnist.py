@@ -19,9 +19,9 @@ def get_latent_space(model, dataloader):
     with torch.no_grad():
         for x, y in dataloader:
             x = x.to(DEVICE)
-            z = model.encode(x)
-            #mu, log_var = model.encode(x)
-            #z = model.reparametrize(mu, log_var)
+            # z = model.encode(x)
+            mu, log_var = model.encode(x)
+            z = model.reparametrize(mu, log_var)
             zs.append(z.detach().cpu().numpy())
             ys.append(y.numpy().reshape(-1, 1))
     return np.vstack(zs), np.vstack(ys)
