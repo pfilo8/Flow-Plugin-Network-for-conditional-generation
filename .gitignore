@@ -1,8 +1,7 @@
 
 data/
 logs/
-
-VanillaVAE/version_0/
+PointFlow/
 
 __pycache__/
 .ipynb_checkpoints/

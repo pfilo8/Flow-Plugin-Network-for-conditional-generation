@@ -13,7 +13,7 @@ dataset:
 
 trainer_params:
   gpus: '0'
-  max_epochs: 101
+  max_epochs: 1001
 
 logging_params:
   save_dir: "logs/mnist"

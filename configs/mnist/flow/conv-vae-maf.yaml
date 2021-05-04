@@ -1,5 +1,5 @@
 model_params:
-  name: "RNVP"
+  name: "MAF"
   type: "flow"
   params:
     features: 40
@@ -25,5 +25,5 @@ trainer_params:
 
 logging_params:
   save_dir: "logs/mnist/"
-  name: "RNVP"
+  name: "MAF"
   manual_seed: 1265

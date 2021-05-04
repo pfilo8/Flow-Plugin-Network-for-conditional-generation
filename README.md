@@ -105,3 +105,8 @@ $ tensorboard --logdir tf
 }
 ```
 -----------
+
+Download PointFlow scripts
+```bash
+git clone git@github.com:stevenygd/PointFlow.git
+```
