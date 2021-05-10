@@ -9,10 +9,10 @@ model_params:
 dataset:
   name: "flow"
   dataset_params:
-    data_path_train_x: "logs/mnist/ConvVAE/version_0/latent_space/z_train.csv"
-    data_path_train_y: "logs/mnist/ConvVAE/version_0/latent_space/y_train_ohe.csv"
-    data_path_valid_x: "logs/mnist/ConvVAE/version_0/latent_space/z_test.csv"
-    data_path_valid_y: "logs/mnist/ConvVAE/version_0/latent_space/y_test_ohe.csv"
+    data_path_train_x: "logs/mnist/ConvVAE/version_2/latent_space/z_train.csv"
+    data_path_train_y: "logs/mnist/ConvVAE/version_2/latent_space/y_train_ohe.csv"
+    data_path_valid_x: "logs/mnist/ConvVAE/version_2/latent_space/z_test.csv"
+    data_path_valid_y: "logs/mnist/ConvVAE/version_2/latent_space/y_test_ohe.csv"
     batch_size: 1024
     num_workers: 24
 
