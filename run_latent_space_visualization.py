@@ -20,13 +20,15 @@ embedding = reducer.fit_transform(df_valid_z)
 for column in df_valid_y:
     print(column)
 
-    fig, ax = plt.subplots(figsize=(20, 14))
+    fig, ax = plt.subplots(figsize=(20, 16))
 
     sns.scatterplot(
         x=embedding[:, 0],
         y=embedding[:, 1],
         hue=df_valid_y[column].values.squeeze(),
         ax=ax,
-        legend='full'
+        legend='full',
     )
+    plt.axis('off')
+    plt.tight_layout()
     plt.savefig(path / Path(f"latent_space/column_{column}.png"))

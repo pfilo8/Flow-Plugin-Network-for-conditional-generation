@@ -6,7 +6,7 @@ def translate_point_cloud_to_xml(pcl, output_path):
     Generate XML format of PointCloud to render it using Mitsuba.
 
     Based on https://github.com/zekunhao1995/PointFlowRenderer
-    :param input_path: Path to npy file with pointcloud
+    :param pcl: Pointcloud. NumPy array [Nx3]
     :param output_path: Path to save XML file.
     """
 
