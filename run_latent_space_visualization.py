@@ -27,8 +27,8 @@ for column in df_valid_y:
         y=embedding[:, 1],
         hue=df_valid_y[column].values.squeeze(),
         ax=ax,
-        legend='full',
+        legend='full'
     )
     plt.axis('off')
     plt.tight_layout()
-    plt.savefig(path / Path(f"latent_space/column_{column}.png"))
+    plt.savefig(path / Path(f"latent_space/column_{column}.png"), dpi=150)
