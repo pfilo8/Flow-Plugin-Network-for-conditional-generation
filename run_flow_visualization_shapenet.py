@@ -9,7 +9,7 @@ import torch.nn as nn
 from PointFlow.args import get_parser
 from PointFlow.models.networks import PointFlow
 
-from utils import get_parser_flow_visualization
+from utils import get_parser_model_flow
 from utils import translate_point_cloud_to_xml
 
 
@@ -59,7 +59,7 @@ def load_data(args):
     return df_train, df_test
 
 
-args = get_parser_flow_visualization().parse_args()
+args = get_parser_model_flow().parse_args()
 
 flow_path = Path(args.flow_path)
 save_path = flow_path / Path('media')

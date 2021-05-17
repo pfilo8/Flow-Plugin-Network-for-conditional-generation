@@ -5,10 +5,10 @@ import pandas as pd
 import seaborn as sns
 import umap
 
-from utils import get_parser_latent_space
+from utils import get_parser_model_flow
 
-args = get_parser_latent_space().parse_args()
-path = args.path
+args = get_parser_model_flow().parse_args()
+path = args.model_path
 
 df_valid_z = pd.read_csv(path / Path("latent_space/z_train.csv"))
 df_valid_y = pd.read_csv(path / Path("latent_space/y_train.csv"))

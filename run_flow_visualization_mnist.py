@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import torch
 from torchvision.utils import make_grid
 
-from utils import get_parser_flow_visualization
+from utils import get_parser_model_flow
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -16,7 +16,7 @@ def show_image(image, filepath):
     plt.savefig(filepath)
 
 
-args = get_parser_flow_visualization().parse_args()
+args = get_parser_model_flow().parse_args()
 save_path = args.flow_path / Path('media')
 
 flow = torch.load(args.flow_path / Path('checkpoints/model.pkt')).to(DEVICE)

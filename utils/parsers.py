@@ -7,26 +7,14 @@ def get_parser_experiment():
         '--config', '-c',
         dest="filename",
         metavar='FILE',
-        help='path to the config file',
-        default='configs/vae.yaml'
+        help='Path to the config file'
     )
     return parser
 
 
-def get_parser_latent_space():
-    parser = argparse.ArgumentParser(description='Generic runner for Flow models')
-    parser.add_argument(
-        '--path', '-p',
-        dest="path",
-        metavar='FILE',
-        help='path to the model directory in logs'
-    )
-    return parser
-
-
-def get_parser_flow_visualization():
+def get_parser_model_flow():
     parser = argparse.ArgumentParser(
-        description='Visualization of the conditional generation of the flow for MNIST Experiment.'
+        description=''
     )
     parser.add_argument(
         '--model_path',

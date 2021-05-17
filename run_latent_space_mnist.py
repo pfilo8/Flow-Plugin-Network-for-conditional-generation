@@ -7,7 +7,7 @@ import torch
 from sklearn.preprocessing import OneHotEncoder
 
 from datasets import get_dataset
-from utils import get_parser_latent_space, get_config
+from utils import get_parser_model_flow, get_config
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -31,8 +31,8 @@ def get_ohe_labels(encoder, df):
     return pd.DataFrame(encoder.transform(df), columns=encoder.categories_[0])
 
 
-args = get_parser_latent_space().parse_args()
-path = args.path
+args = get_parser_model_flow().parse_args()
+path = args.model_path
 
 data_dir = path / Path('latent_space')
 data_dir.mkdir(exist_ok=True)
