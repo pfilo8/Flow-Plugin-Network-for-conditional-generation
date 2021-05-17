@@ -16,16 +16,16 @@ def load_dataframes(path):
         return pd.concat([df_z, df_y], axis=1)
 
     path_train_z = path / Path("latent_space/z_train.csv")
-    path_train_y = path / Path("latent_space/y_train.csv")
+    path_train_y = path / Path("latent_space/y_train_numeric.csv")
     path_test_z = path / Path("latent_space/z_test.csv")
-    path_test_y = path / Path("latent_space/y_test.csv")
+    path_test_y = path / Path("latent_space/y_test_numeric.csv")
 
     df_train = load_df(path_train_z, path_train_y)
     df_test = load_df(path_test_z, path_test_y)
     return df_train, df_test
 
 
-def predict(flow, x, num_classes, log_weights=None, mapping=None):
+def predict(flow, x, num_classes, log_weights=None):
     results = []
 
     for i in range(num_classes):
@@ -38,7 +38,4 @@ def predict(flow, x, num_classes, log_weights=None, mapping=None):
     if log_weights is not None:
         y_prob = y_prob + log_weights
     y_hat = y_prob.argmax(axis=1)
-    y_hat = pd.Series(y_hat)
-    if mapping is not None:
-        y_hat = y_hat.map(mapping)
     return y_hat
