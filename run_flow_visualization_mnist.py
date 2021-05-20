@@ -19,7 +19,7 @@ def show_image(image, filepath):
 args = get_parser_model_flow().parse_args()
 save_path = args.flow_path / Path('media')
 
-flow = torch.load(args.flow_path / Path('checkpoints/model.pkt')).to(DEVICE)
+flow = torch.load(args.flow_path / Path('checkpoints/model.pkt')).to(DEVICE).eval()
 model = torch.load(args.model_path / Path('checkpoints/model.pkt')).to(DEVICE)
 
 n_samples = 64
