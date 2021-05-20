@@ -1,5 +1,5 @@
 model_params:
-  name: "RNVP"
+  name: "MAF"
   type: "flow"
   params:
     features: 40
@@ -20,13 +20,13 @@ dataset:
     num_workers: 24
 
 exp_params:
-  patience: 100
+  patience: 50
 
 trainer_params:
-  gpus: '0'
+  gpus: 1
   max_epochs: 5000
 
 logging_params:
   save_dir: "logs/mnist/"
-  name: "RNVP"
+  name: "MAF"
   manual_seed: 1265
