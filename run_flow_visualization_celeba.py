@@ -1,5 +1,4 @@
 from pathlib import Path
-from uuid import uuid4
 
 import matplotlib.pyplot as plt
 import torch
@@ -36,21 +35,33 @@ model.load_state_dict(torch.load(args.model_path / Path('checkpoints/MSP_CelebA.
 model.to(DEVICE)
 model.eval()
 
-n_samples = 1
-n_row = 1
+n_samples = 16
+n_row = 8
 
 outputs = []
 
-for idx, label in enumerate(CLASSES):
-    context = torch.zeros(1, 40).to(DEVICE)
-    context[0][idx] = 1.0
-    print(context)
+with torch.no_grad():
+    for idx, label in enumerate(CLASSES):
+        context = torch.zeros(1, 40).to(DEVICE)
+        context[0][idx] = 1.0
+        print(context)
 
-    samples = flow.sample(n_samples, context).squeeze(0)
-    output = model.decoder(samples)
-    output = output.add_(1.0).div_(2.0)
-    # outputs.append(output)
+        samples = flow.sample(n_samples, context).squeeze(0)
+        output = model.decoder(samples)
+        output = output.add_(1.0).div_(2.0)
+        outputs.append(output)
+        # outputs.append(output)
+        show_image(
+            (make_grid(output, nrow=n_row, padding=0)),
+            filepath=save_path / Path(f"{label}.png")
+        )
+
     show_image(
-        (make_grid(output, nrow=n_row, padding=0)),
-        filepath=save_path / Path(f"{label}-{uuid4()}.png")
+        make_grid(torch.cat(outputs)[::4], 16),
+        filepath=save_path / Path("all-16.png")
+    )
+
+    show_image(
+        make_grid(torch.cat(outputs)[::2], 32),
+        filepath=save_path / Path("all-32.png")
     )
