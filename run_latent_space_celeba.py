@@ -1,4 +1,5 @@
 from pathlib import Path
+from tqdm import tqdm
 
 import numpy as np
 import pandas as pd
@@ -8,7 +9,8 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision.datasets import CelebA
 
-from utils import get_parser_latent_space, load_model
+from models.vae.msp import MSP
+from utils import get_parser_model_flow
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -18,7 +20,7 @@ def get_latent_space(model, dataloader):
     zs = []
 
     with torch.no_grad():
-        for x, y in dataloader:
+        for x, y in tqdm(dataloader):
             x = x.to(DEVICE)
             mu, log_var = model.encode(x)
             z = model.reparameterize(mu, log_var)
@@ -27,22 +29,22 @@ def get_latent_space(model, dataloader):
     return np.vstack(zs), np.vstack(ys)
 
 
-args = get_parser_latent_space().parse_args()
-path = args.path
+args = get_parser_model_flow().parse_args()
+path = Path(args.model_path)
 
 data_dir = path / Path('latent_space')
 data_dir.mkdir(exist_ok=True)
 
-model = load_model(path, 'vae').to(DEVICE)
-
-SetRange = transforms.Lambda(lambda X: 2 * X - 1.)
+model = MSP(256, 40, 64, nc=3)
+model.load_state_dict(torch.load(path / Path('checkpoints/MSP_CelebA.tch'), map_location=DEVICE))
+model.to(DEVICE)
+model.eval()
 
 transform = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.CenterCrop(148),
-    transforms.Resize(64),
+    transforms.CenterCrop(178),
+    transforms.Resize(256),
     transforms.ToTensor(),
-    SetRange
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 bs = 256
