@@ -3,8 +3,12 @@ model_params:
   type: "flow"
   params:
     features: 2048
-    hidden_features: 1000
+    hidden_features: 1024
     context_features: 40
+    embedding_features: 256
+    num_layers: 10
+    batch_norm_within_layers: True
+    batch_norm_between_layers: True
 
 dataset:
   name: "flow"
@@ -17,11 +21,11 @@ dataset:
     num_workers: 24
 
 exp_params:
-  patience: 50
+  patience: 200
 
 trainer_params:
   gpus: '0'
-  max_epochs: 2000
+  max_epochs: 200
 
 logging_params:
   save_dir: "logs/celeba/"
