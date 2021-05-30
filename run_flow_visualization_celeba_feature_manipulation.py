@@ -54,13 +54,15 @@ with torch.no_grad():
     mu, log_var = model.encode(x)
     z = model.reparameterize(mu, log_var)
 
-    image = (x[0] + 1) / 2
-    image_recon = (model.decoder(z[0:1]) + 1) / 2
+    idx = 0
+
+    image = (x[idx] + 1) / 2
+    image_recon = (model.decoder(z[idx:idx+1]) + 1) / 2
     show_image(image, save_path / Path('image.png'))
     show_image(image_recon, save_path / Path('image_recon.png'))
 
-    y_image_org = torch.tensor(y[0:1], dtype=torch.float)
-    noise = flow.transform_to_noise(z[0:1], y_image_org)
+    y_image_org = torch.tensor(y[idx:idx+1], dtype=torch.float)
+    noise = flow.transform_to_noise(z[idx:idx+1], y_image_org)
 
     for idx, label in enumerate(CLASSES):
         print(f"Processing feature number {idx} - {label}")
