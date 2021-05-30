@@ -1,3 +1,5 @@
+import glob
+import subprocess
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -46,7 +48,7 @@ transform = transforms.Compose([
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 dataset_valid = CelebA(root='data', split="valid", transform=transform, download=False)
-dataloader_valid = DataLoader(dataset_valid, batch_size=1)
+dataloader_valid = DataLoader(dataset_valid, batch_size=10)
 
 with torch.no_grad():
     x, y = next(iter(dataloader_valid))
@@ -54,15 +56,15 @@ with torch.no_grad():
     mu, log_var = model.encode(x)
     z = model.reparameterize(mu, log_var)
 
-    idx = 0
+    idx = 1
 
     image = (x[idx] + 1) / 2
-    image_recon = (model.decoder(z[idx:idx+1]) + 1) / 2
+    image_recon = (model.decoder(z[idx:idx + 1]) + 1) / 2
     show_image(image, save_path / Path('image.png'))
     show_image(image_recon, save_path / Path('image_recon.png'))
 
-    y_image_org = torch.tensor(y[idx:idx+1], dtype=torch.float)
-    noise = flow.transform_to_noise(z[idx:idx+1], y_image_org)
+    y_image_org = torch.tensor(y[idx:idx + 1], dtype=torch.float)
+    noise = flow.transform_to_noise(z[idx:idx + 1], y_image_org)
 
     for idx, label in enumerate(CLASSES):
         print(f"Processing feature number {idx} - {label}")
@@ -77,3 +79,9 @@ with torch.no_grad():
         image_chg = model.decoder(samples)
         image_chg = (image_chg[0] + 1) / 2
         show_image(image_chg, save_path / Path(f"{idx}_{label}_{new_value}.png"))
+
+for file in glob.glob(f'{save_path}/*.png'):
+    command = ["montage", "-mode", "concatenate", f"{save_path}/image.png", f"{save_path}/image_recon.png", file,
+               f"{save_path}/Mosaic-{file[:-4]}.png"]
+    print(command)
+    subprocess.run(command)
