@@ -2,7 +2,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import torch
-from torchvision.utils import make_grid
+from torchvision.utils import save_image
 
 from models.vae.msp import MSP
 from utils import get_parser_model_flow
@@ -18,14 +18,6 @@ CLASSES = [
 ]
 plt.ioff()
 
-
-def show_image(image, filepath):
-    plt.imshow(image.squeeze(0).permute(1, 2, 0).detach().cpu())
-    plt.axis('off')
-    plt.tight_layout()
-    plt.savefig(filepath)
-
-
 args = get_parser_model_flow().parse_args()
 save_path = args.flow_path / Path('media')
 
@@ -35,8 +27,8 @@ model.load_state_dict(torch.load(args.model_path / Path('checkpoints/MSP_CelebA.
 model.to(DEVICE)
 model.eval()
 
-n_samples = 16
-n_row = 8
+n_samples = 4
+n_row = 4
 
 outputs = []
 
@@ -50,18 +42,9 @@ with torch.no_grad():
         output = model.decoder(samples)
         output = output.add_(1.0).div_(2.0)
         outputs.append(output)
-        # outputs.append(output)
-        show_image(
-            (make_grid(output, nrow=n_row, padding=0)),
-            filepath=save_path / Path(f"{label}.png")
+        save_image(
+            output,
+            save_path / Path(f"{label}.png"),
+            nrow=n_row,
+            padding=0
         )
-
-    show_image(
-        make_grid(torch.cat(outputs)[::4], 16),
-        filepath=save_path / Path("all-16.png")
-    )
-
-    show_image(
-        make_grid(torch.cat(outputs)[::2], 32),
-        filepath=save_path / Path("all-32.png")
-    )
