@@ -22,6 +22,19 @@ df_samples_z = df_samples_z.dropna()  # Flow may sometimes generate NaNs
 df_samples_y = pd.read_csv(flow_path / Path("samples/ys.csv"))
 df_samples_y = df_samples_y.loc[df_samples_z.dropna().index]
 
+if 'shapenet' in model_path:
+    classes = ['airplane', 'bag', 'basket', 'bathtub', 'bed', 'bench',
+               'birdhouse', 'bookshelf', 'bottle', 'bowl', 'bus', 'cabinet',
+               'camera', 'can', 'cap', 'car', 'cellphone', 'chair', 'clock',
+               'dishwasher', 'earphone', 'faucet', 'file', 'guitar', 'helmet',
+               'jar', 'keyboard', 'knife', 'lamp', 'laptop', 'mailbox',
+               'microphone', 'microwave', 'monitor', 'motorcycle', 'mug', 'piano',
+               'pillow', 'pistol', 'pot', 'printer', 'remote_control', 'rifle',
+               'rocket', 'skateboard', 'sofa', 'speaker', 'stove', 'table',
+               'telephone', 'tin_can', 'tower', 'train', 'vessel', 'washer']
+    mapping = {idx: cls for idx, cls in enumerate(classes)}
+    df_samples_y['cate'] = df_samples_y['cate'].map(mapping)
+
 reducer = umap.UMAP()
 print("Creating embeddings.")
 embedding = reducer.fit_transform(df_valid_z)
@@ -39,7 +52,7 @@ for column in df_valid_y:
         y=embedding[:, 1],
         hue=df_valid_y[column].values.squeeze(),
         ax=ax,
-        legend='full',
+        legend=None,
         palette=palette
     )
     plt.axis('off')
@@ -53,7 +66,7 @@ for column in df_valid_y:
         y=embedding_samples[:, 1],
         hue=df_samples_y[column].values.squeeze(),
         ax=ax,
-        legend='full',
+        legend=None,
         palette=palette
     )
     plt.axis('off')
