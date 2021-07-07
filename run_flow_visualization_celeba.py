@@ -1,7 +1,9 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
+from nflows.utils import torchutils
 from torchvision.utils import save_image
 
 from models.vae.msp import MSP
@@ -32,19 +34,41 @@ n_row = 4
 
 outputs = []
 
+
+def sample_from_flow(flow, num_samples, context=None, temperature=1.0):
+    embedded_context = flow._embedding_net(context)
+    noise = temperature * flow._distribution.sample(num_samples, context=embedded_context)
+
+    if embedded_context is not None:
+        # Merge the context dimension with sample dimension in order to apply the transform.
+        noise = torchutils.merge_leading_dims(noise, num_dims=2)
+        embedded_context = torchutils.repeat_rows(
+            embedded_context, num_reps=num_samples
+        )
+
+    samples, _ = flow._transform.inverse(noise, context=embedded_context)
+
+    if embedded_context is not None:
+        # Split the context dimension from sample dimension.
+        samples = torchutils.split_leading_dim(samples, shape=[-1, num_samples])
+
+    return samples
+
+
 with torch.no_grad():
     for idx, label in enumerate(CLASSES):
-        context = torch.zeros(1, 40).to(DEVICE)
-        context[0][idx] = 1.0
-        print(context)
+        for t in np.linspace(0.7, 0.8, 11):
+            context = torch.zeros(1, 40).to(DEVICE)
+            context[0][idx] = 1.0
+            print(context)
 
-        samples = flow.sample(n_samples, context).squeeze(0)
-        output = model.decoder(samples)
-        output = output.add_(1.0).div_(2.0)
-        outputs.append(output)
-        save_image(
-            output,
-            save_path / Path(f"{label}.png"),
-            nrow=n_row,
-            padding=0
-        )
+            samples = sample_from_flow(flow, n_samples, context, temperature=t).squeeze(0)
+            output = model.decoder(samples)
+            output = output.add_(1.0).div_(2.0)
+            outputs.append(output)
+            save_image(
+                output,
+                save_path / Path(f"{label}_{t}.png"),
+                nrow=n_row,
+                padding=0
+            )
