@@ -33,8 +33,8 @@ class FlowDataModule(pl.LightningDataModule):
         self.train_data = CSVDataset(self.data_path_train_x, self.data_path_train_y)
         self.valid_data = CSVDataset(self.data_path_valid_x, self.data_path_valid_y)
 
-    def train_dataloader(self):
-        return DataLoader(self.train_data, batch_size=self.batch_size, num_workers=self.num_workers)
+    def train_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
+        return DataLoader(self.train_data, batch_size=self.batch_size, num_workers=self.num_workers, shuffle=True)
 
     def val_dataloader(self) -> Union[DataLoader, List[DataLoader]]:
         return DataLoader(self.valid_data, batch_size=self.batch_size, num_workers=self.num_workers)
