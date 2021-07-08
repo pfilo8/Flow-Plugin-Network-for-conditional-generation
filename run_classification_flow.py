@@ -31,11 +31,16 @@ x_test = torch.tensor(x_test.values, dtype=torch.float).to(DEVICE)
 log_p_y = np.log(y_train.value_counts(normalize=True)).sort_index().values
 num_classes = 55 if 'shapenet' in path else 10
 
-y_train_hat = predict(flow, x_train, num_classes, log_weights=log_p_y)
-y_test_hat = predict(flow, x_test, num_classes, log_weights=log_p_y)
+y_train_hat = predict(flow, x_train, num_classes, log_weights=None)
+y_test_hat = predict(flow, x_test, num_classes, log_weights=None)
+
+y_train_hat_log = predict(flow, x_train, num_classes, log_weights=log_p_y)
+y_test_hat_log = predict(flow, x_test, num_classes, log_weights=log_p_y)
 
 results.append(('flow', 'train', accuracy_score(y_train, y_train_hat)))
 results.append(('flow', 'test', accuracy_score(y_test, y_test_hat)))
+results.append(('flow', 'train_log', accuracy_score(y_train, y_train_hat_log)))
+results.append(('flow', 'test_log', accuracy_score(y_test, y_test_hat_log)))
 
 print('Saving results.')
 results = pd.DataFrame(results)
