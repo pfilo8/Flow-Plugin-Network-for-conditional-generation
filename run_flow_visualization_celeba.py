@@ -72,3 +72,41 @@ with torch.no_grad():
                 nrow=n_row,
                 padding=0
             )
+
+CONTEXTS = [
+    (
+        torch.tensor(
+            [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 1]], dtype=torch.float),
+        'Male No_Beard Young'
+    ),
+    (
+        torch.tensor(
+            [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              1, 0, 0, 0, 1]], dtype=torch.float),
+        'Male No_Beard Wearing_Hat Young'
+    ),
+    (
+        torch.tensor(
+            [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 1]], dtype=torch.float),
+        'Male Mouth_Slightly_Open No_Beard Young'
+    )
+]
+
+with torch.no_grad():
+    for context, label in CONTEXTS:
+        for t in np.linspace(0.7, 0.8, 11):
+            print(context, t)
+            context = context.to(DEVICE)
+
+            samples = sample_from_flow(flow, n_samples, context, temperature=t).squeeze(0)
+            output = model.decoder(samples)
+            output = output.add_(1.0).div_(2.0)
+            outputs.append(output)
+            save_image(
+                output,
+                save_path / Path(f"0_{label}_{t}.png"),
+                nrow=n_row,
+                padding=0
+            )
