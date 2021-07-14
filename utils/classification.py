@@ -32,7 +32,6 @@ def predict(flow, x, num_classes, log_weights=None):
         for i in range(num_classes):
             context = torch.zeros(len(x), num_classes).to(DEVICE)
             context[:, i] = 1.0
-            print(context)
             results.append(flow.log_prob(x, context).detach().cpu().numpy())
 
     y_prob = np.stack(results, axis=1)

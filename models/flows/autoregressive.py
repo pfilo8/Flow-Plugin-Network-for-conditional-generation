@@ -1,4 +1,6 @@
 """Implementations of autoregressive flows."""
+from functools import partial
+
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -29,7 +31,7 @@ class MaskedAutoregressiveFlow(Flow):
             use_residual_blocks=True,
             use_random_masks=False,
             use_random_permutations=False,
-            activation=F.relu,
+            activation=partial(F.leaky_relu, negative_slope=0.2),
             dropout_probability=0.0,
             batch_norm_within_layers=False,
             batch_norm_between_layers=False,
@@ -58,7 +60,7 @@ class MaskedAutoregressiveFlow(Flow):
             )
             if batch_norm_between_layers:
                 layers.append(BatchNorm(features))
-                
+
         embedding_net = nn.Identity() if embedding_features is None else nn.Linear(context_features, embedding_features)
 
         super().__init__(
