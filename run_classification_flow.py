@@ -45,3 +45,15 @@ results.append(('flow', 'test_log', accuracy_score(y_test, y_test_hat_log)))
 print('Saving results.')
 results = pd.DataFrame(results)
 results.to_csv(args.flow_path / Path('classification-results-flow.csv'), index=False)
+
+pd.DataFrame({
+    'y_train': y_train,
+    'y_train_hat': y_train_hat,
+    'y_train_hat_log': y_train_hat_log
+}).to_csv(args.flow_path / Path('classification-results-train-predictions.csv'), index=False)
+
+pd.DataFrame({
+    'y_test': y_test,
+    'y_test_hat': y_test_hat,
+    'y_test_hat_log': y_test_hat_log
+}).to_csv(args.flow_path / Path('classification-results-test-predictions.csv'), index=False)
