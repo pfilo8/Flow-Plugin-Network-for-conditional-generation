@@ -20,7 +20,7 @@ df_valid_y = pd.read_csv(model_path / Path("latent_space/y_train.csv"))
 df_samples_z = pd.read_csv(flow_path / Path("samples/xs.csv"))
 df_samples_z = df_samples_z.dropna()  # Flow may sometimes generate NaNs
 df_samples_y = pd.read_csv(flow_path / Path("samples/ys.csv"))
-df_samples_y = df_samples_y.loc[df_samples_z.dropna().index]
+df_samples_y = df_samples_y.loc[df_samples_z.index]
 
 if 'shapenet' in model_path:
     classes = ['airplane', 'bag', 'basket', 'bathtub', 'bed', 'bench',
@@ -35,7 +35,25 @@ if 'shapenet' in model_path:
     mapping = {idx: cls for idx, cls in enumerate(classes)}
     df_samples_y['cate'] = df_samples_y['cate'].map(mapping)
 
-reducer = umap.UMAP()
+    # Class selecting
+    # 10 most common classes
+    """
+    selected_classes = ['table', 'chair', 'airplane', 'car', 'sofa', 'rifle', 'lamp', 'vessel', 'bench', 'speaker']
+
+    df_index = df_valid_y['cate'].isin(selected_classes)
+    df_samples_index = df_samples_y['cate'].isin(selected_classes)
+
+    df_valid_y = df_valid_y.loc[df_index]
+    df_samples_y = df_samples_y.loc[df_samples_index]
+    """
+
+    df_valid_y = df_valid_y.sort_values('cate')  # Persist correct order of y
+    df_valid_z = df_valid_z.loc[df_valid_y.index]
+
+    df_samples_y = df_samples_y.sort_values('cate')  # Persist correct order of y
+    df_samples_z = df_samples_z.loc[df_samples_y.index]
+
+reducer = umap.UMAP(random_state=42)
 print("Creating embeddings.")
 embedding = reducer.fit_transform(df_valid_z)
 embedding_samples = reducer.transform(df_samples_z)

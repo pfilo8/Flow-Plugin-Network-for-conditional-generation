@@ -68,7 +68,7 @@ save_path.mkdir(exist_ok=True)
 model = load_model(args.model_path)
 flow = load_flow(flow_path / Path('checkpoints/model.pkt'))
 
-N = 2048 * 4
+N = 2048 * 2
 NUM_CLASSES = 55
 
 classes = ['airplane', 'bag', 'basket', 'bathtub', 'bed', 'bench',
@@ -82,12 +82,14 @@ classes = ['airplane', 'bag', 'basket', 'bathtub', 'bed', 'bench',
            'telephone', 'tin_can', 'tower', 'train', 'vessel', 'washer']
 
 for label, cls in enumerate(classes):
-    print(f'[{label + 1} / {len(classes)}] Generating {cls}.')
-    context = torch.zeros((1, NUM_CLASSES))
-    context[0, label] = 1
+    for i in range(10):
+        print(f'[{label + 1} / {len(classes)}] Generating {cls}.')
+        context = torch.zeros((1, NUM_CLASSES))
+        context[0, label] = 1
 
-    sample = flow.sample(1, context).squeeze(0)
-    result = model.decode(z=sample, num_points=N)
+        with torch.no_grad():
+            sample = flow.sample(1, context).squeeze(0)
+            result = model.decode(z=sample, num_points=N)
 
-    generated_samples = result[1].cpu().detach().numpy()
-    translate_point_cloud_to_xml(generated_samples[0], save_path / Path(f'{cls}.xml'))
+            generated_samples = result[1].cpu().detach().numpy()
+            translate_point_cloud_to_xml(generated_samples[0], save_path / Path(f'{cls}_{i}.xml'))

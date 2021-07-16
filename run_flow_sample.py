@@ -28,9 +28,10 @@ for i in range(num_classes):
     context[0][i] = 1.0
     print(context)
 
-    samples = flow.sample(n_samples, context).squeeze(0).detach().numpy()
-    outputs_samples.append(samples)
-    outputs_ys.append(int(i) * np.ones((samples.shape[0], 1), dtype=np.int8))
+    with torch.no_grad():
+        samples = flow.sample(n_samples, context).squeeze(0).detach().numpy()
+        outputs_samples.append(samples)
+        outputs_ys.append(int(i) * np.ones((samples.shape[0], 1), dtype=np.int8))
 
 df_samples = pd.DataFrame(np.vstack(outputs_samples))
 df_ys = pd.DataFrame(np.vstack(outputs_ys))
