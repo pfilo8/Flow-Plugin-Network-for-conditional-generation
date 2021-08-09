@@ -49,7 +49,7 @@ with torch.no_grad():
     mu, log_var = model.encode(x)
     z = model.reparameterize(mu, log_var)
 
-    idx = 0
+    idx = 1
 
     image = (x[idx] + 1) / 2
     image_recon = (model.decoder(z[idx:idx + 1]) + 1) / 2
@@ -79,7 +79,8 @@ with torch.no_grad():
         )
 
 for file in glob.glob(f'{save_path}/*.png'):
+    filename = file.split('/')[-1]
     command = ["montage", "-mode", "concatenate", f"{save_path}/image.png", f"{save_path}/image_recon.png", file,
-               f"{save_path}/Mosaic-{file[:-4]}.png"]
+               f"{save_path}/Mosaic-{filename}.png"]
     print(command)
     subprocess.run(command)
