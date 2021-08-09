@@ -13,7 +13,7 @@ from torchvision.utils import save_image
 from models.vae.msp import MSP
 from utils import get_parser_model_flow
 
-DEVICE = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 CLASSES = [
     '5_o_Clock_Shadow', 'Arched_Eyebrows', 'Attractive', 'Bags_Under_Eyes', 'Bald', 'Bangs', 'Big_Lips', 'Big_Nose',
     'Black_Hair', 'Blond_Hair', 'Blurry', 'Brown_Hair', 'Bushy_Eyebrows', 'Chubby', 'Double_Chin', 'Eyeglasses',
@@ -49,14 +49,14 @@ with torch.no_grad():
     mu, log_var = model.encode(x)
     z = model.reparameterize(mu, log_var)
 
-    idx = 2
+    idx = 0
 
     image = (x[idx] + 1) / 2
     image_recon = (model.decoder(z[idx:idx + 1]) + 1) / 2
     save_image(image, save_path / Path('image.png'), nrow=1, padding=0)
     save_image(image_recon, save_path / Path('image_recon.png'), nrow=1, padding=0)
 
-    y_image_org = torch.tensor(y[idx:idx + 1], dtype=torch.float)
+    y_image_org = y[idx:idx + 1].clone().float()
     noise = flow.transform_to_noise(z[idx:idx + 1], y_image_org)
 
     for idx, label in enumerate(CLASSES):
