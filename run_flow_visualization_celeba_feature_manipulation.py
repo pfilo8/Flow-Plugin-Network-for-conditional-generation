@@ -25,8 +25,6 @@ CLASSES = [
 plt.ioff()
 
 args = get_parser_model_flow().parse_args()
-save_path = args.flow_path / Path('media') / Path('feature-manipulation')
-save_path.mkdir(exist_ok=True)
 
 flow = torch.load(args.flow_path / Path('checkpoints/model.pkt')).to(DEVICE).eval()
 model = MSP(256, 40, 64, nc=3)
@@ -43,44 +41,49 @@ transform = transforms.Compose([
 dataset_valid = CelebA(root='data', split="valid", transform=transform, download=False)
 dataloader_valid = DataLoader(dataset_valid, batch_size=10)
 
-with torch.no_grad():
-    x, y = next(iter(dataloader_valid))
-    x, y = x.to(DEVICE), y.to(DEVICE)
-    mu, log_var = model.encode(x)
-    z = model.reparameterize(mu, log_var)
+for idx in range(3, 10):
+    save_path = args.flow_path / Path('media') / Path(f'feature-manipulation-{idx}')
+    save_path.mkdir(exist_ok=True)
 
-    idx = 1
+    with torch.no_grad():
+        x, y = next(iter(dataloader_valid))
+        x, y = x.to(DEVICE), y.to(DEVICE)
+        mu, log_var = model.encode(x)
+        z = model.reparameterize(mu, log_var)
 
-    image = (x[idx] + 1) / 2
-    image_recon = (model.decoder(z[idx:idx + 1]) + 1) / 2
-    save_image(image, save_path / Path('image.png'), nrow=1, padding=0)
-    save_image(image_recon, save_path / Path('image_recon.png'), nrow=1, padding=0)
+        # idx = 2
 
-    y_image_org = y[idx:idx + 1].clone().float()
-    noise = flow.transform_to_noise(z[idx:idx + 1], y_image_org)
+        image = (x[idx] + 1) / 2
+        image_recon = (model.decoder(z[idx:idx + 1]) + 1) / 2
+        save_image(image, save_path / Path('image.png'), nrow=1, padding=0)
+        save_image(image_recon, save_path / Path('image_recon.png'), nrow=1, padding=0)
 
-    for idx, label in enumerate(CLASSES):
-        print(f"Processing feature number {idx} - {label}")
-        y_image_chg = y_image_org.clone().detach()
-        print(y_image_chg)
-        new_value = 1.0 if y_image_chg[0][idx] == 0.0 else 0.0
-        y_image_chg[0][idx] = new_value
+        y_image_org = y[idx:idx + 1].clone().float()
+        noise = flow.transform_to_noise(z[idx:idx + 1], y_image_org)
 
-        embedded_context = flow._embedding_net(y_image_chg)
-        samples, _ = flow._transform.inverse(noise, context=embedded_context)
+        for idx, label in enumerate(CLASSES):
+            print(f"Processing feature number {idx} - {label}")
+            print(y_image_org)
+            y_image_chg = y_image_org.clone().detach()
+            new_value = 1.0 if y_image_chg[0][idx] == 0.0 else 0.0
+            y_image_chg[0][idx] = new_value
+            print(idx, y_image_chg)
 
-        image_chg = model.decoder(samples)
-        image_chg = (image_chg[0] + 1) / 2
-        save_image(
-            image_chg,
-            save_path / Path(f"{idx}_{label}_{new_value}.png"),
-            nrow=1,
-            padding=0
-        )
+            embedded_context = flow._embedding_net(y_image_chg)
+            samples, _ = flow._transform.inverse(noise, context=embedded_context)
 
-for file in glob.glob(f'{save_path}/*.png'):
-    filename = file.split('/')[-1]
-    command = ["montage", "-mode", "concatenate", f"{save_path}/image.png", f"{save_path}/image_recon.png", file,
-               f"{save_path}/Mosaic-{filename}.png"]
-    print(command)
-    subprocess.run(command)
+            image_chg = model.decoder(samples)
+            image_chg = (image_chg[0] + 1) / 2
+            save_image(
+                image_chg,
+                save_path / Path(f"{idx}_{label}_{new_value}.png"),
+                nrow=1,
+                padding=0
+            )
+
+    for file in glob.glob(f'{save_path}/*.png'):
+        filename = file.split('/')[-1]
+        command = ["montage", "-mode", "concatenate", f"{save_path}/image.png", f"{save_path}/image_recon.png", file,
+                   f"{save_path}/Mosaic-{filename[:-4]}.png"]
+        print(command)
+        subprocess.run(command)

@@ -5,8 +5,9 @@ model_params:
     features: 2048
     hidden_features: 1024
     context_features: 40
-    embedding_features: 256
+    embedding_features: 512
     num_layers: 10
+    num_blocks_per_layer: 10
     batch_norm_within_layers: True
     batch_norm_between_layers: True
 
@@ -17,15 +18,15 @@ dataset:
     data_path_train_y: "logs/celeba/MSP/msp_256/latent_space/y_train.csv"
     data_path_valid_x: "logs/celeba/MSP/msp_256/latent_space/z_valid.csv"
     data_path_valid_y: "logs/celeba/MSP/msp_256/latent_space/y_valid.csv"
-    batch_size: 1024
+    batch_size: 512
     num_workers: 24
 
 exp_params:
-  patience: 200
+  patience: 25
 
 trainer_params:
   gpus: '0'
-  max_epochs: 200
+  max_epochs: 5000
 
 logging_params:
   save_dir: "logs/celeba/"

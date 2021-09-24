@@ -3,25 +3,26 @@ model_params:
   type: "flow"
   params:
     features: 128
-    hidden_features: 256
+    hidden_features: 1024
     context_features: 55
+    num_blocks_per_layer: 4
 
 dataset:
   name: "flow"
   dataset_params:
-    data_path_train_x: "logs/shapenet/PointFlow/all/latent_space/z_train.csv"
-    data_path_train_y: "logs/shapenet/PointFlow/all/latent_space/y_train_ohe.csv"
-    data_path_valid_x: "logs/shapenet/PointFlow/all/latent_space/z_test.csv"
-    data_path_valid_y: "logs/shapenet/PointFlow/all/latent_space/y_test_ohe.csv"
-    batch_size: 1024
+    data_path_train_x: "logs/shapenet/PointFlow/all/latent_space/z_train_split.csv"
+    data_path_train_y: "logs/shapenet/PointFlow/all/latent_space/y_train_ohe_split.csv"
+    data_path_valid_x: "logs/shapenet/PointFlow/all/latent_space/z_valid_split.csv"
+    data_path_valid_y: "logs/shapenet/PointFlow/all/latent_space/y_valid_ohe_split.csv"
+    batch_size: 256
     num_workers: 24
 
 exp_params:
-  patience: 25
+  patience: 50
 
 trainer_params:
   gpus: '0'
-  max_epochs: 1000
+  max_epochs: 5000
 
 logging_params:
   save_dir: "logs/shapenet/"

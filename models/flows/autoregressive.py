@@ -31,7 +31,7 @@ class MaskedAutoregressiveFlow(Flow):
             use_residual_blocks=True,
             use_random_masks=False,
             use_random_permutations=False,
-            activation=partial(F.leaky_relu, negative_slope=0.2),
+            activation=F.relu,
             dropout_probability=0.0,
             batch_norm_within_layers=False,
             batch_norm_between_layers=False,

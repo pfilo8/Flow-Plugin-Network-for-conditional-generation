@@ -18,7 +18,7 @@ experiment = get_experiment(config, model)
 
 if 'patience' in config.get('exp_params', {}):
     early_stop_callback = pl.callbacks.EarlyStopping(
-        monitor='val_loss',
+        monitor='val_acc',
         patience=config['exp_params'].get('patience', 50),
     )
     callbacks = [early_stop_callback]
