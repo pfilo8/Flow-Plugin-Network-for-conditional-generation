@@ -1,52 +1,16 @@
-# Plug-in networks for generatvie models
+![Teaser](assets/Image-teaser.png)
+<h1 align="center">
+  Flow Plugin Network for conditional generation 
+  <br>
+</h1>
 
-VAE based on [PyTorch-VAE](https://github.com/AntixK/PyTorch-VAE/)
-Normalizing Flows based on [nflows](https://github.com/bayesiains/nflows)
-PointFlow based on [PointFlow](https://github.com/stevenygd/PointFlow)
-Point Cloud Renderer based on [Point Flow Renderer](https://github.com/zekunhao1995/PointFlowRenderer)
+<h4 align="center">Patryk Wielopolski, Michał Koperski, Maciej Zięba</h4>
 
-### Usage
-```
-$ cd PyTorch-VAE
-$ python run.py -c configs/<config-file-name.yaml>
-```
-**Config file template**
-```yaml
-model_params:
-  name: "<name of VAE model>"
-  in_channels: 3
-  latent_dim: 
-    .         # Other parameters required by the model
-    .
-    .
+> Generative models have gained many researcher's attention in the last years resulting in models such as StyleGAN for human face generation or PointFlow for 3D point cloud generation. However, by default, we cannot control its sampling process, i.e., we cannot generate a sample with a specific set of the attributes. The current approach is model retraining with additional inputs and different architecture, which requires time and computational resources. We propose a novel approach that enables to generate objects with a given set of attributes without retraining the base model. For this purpose, we utilize the normalizing flow models - Conditional Masked Autoregressive Flow and Conditional Real NVP, as a Flow Plugin Network (FPN).
 
-exp_params:
-  data_path: "<path to the celebA dataset>"
-  img_size: 64    # Models are designed to work for this size
-  batch_size: 64  # Better to have a square number
-  LR: 0.005
-  weight_decay:
-    .         # Other arguments required for training, like scheduler etc.
-    .
-    .
+## Idea
 
-trainer_params:
-  gpus: 1         
-  max_nb_epochs: 50
-  gradient_clip_val: 1.5
-    .
-    .
-    .
-
-logging_params:
-  save_dir: "logs/"
-  name: "<experiment name>"
-  manual_seed: 
-```
-
-**View TensorBoard Logs**
-```
-$ cd logs/<experiment name>/version_<the version you want>
-$ tensorboard --logdir tf
-```
-
+## Authors
+  * **Patryk Wielopolski** - Wrocław University of Science and Technology
+  * **Michał Koperski** - Tooploox Ltd. - [Webpage](http://mkoperski.com) 
+  * **Maciej Zięba** - Wrocław University of Science and Technology, Tooploox Ltd. - [Webpage](https://www.ii.pwr.edu.pl/~zieba/) 
