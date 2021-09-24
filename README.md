@@ -27,8 +27,6 @@
 ### Attribute manipulation
 ![Attribute manipulation](assets/celeba-feature-manipulation-0.png)
 
-## Idea
-
 ## Authors
   * **Patryk Wielopolski** - Wrocław University of Science and Technology
   * **Michał Koperski** - Tooploox Ltd. - [Webpage](http://mkoperski.com) 
